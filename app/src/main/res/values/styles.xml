@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="MovieDetailsSmallTitle" parent="Widget.AppCompat.TextView">
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">@color/movie_details_title</item>
+        <item name="fontWeight">900</item>
+        <item name="lineHeight">20sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:shadowColor">@color/movie_title_shadow</item>
+        <item name="android:shadowDx">0</item>
+        <item name="android:shadowDy">6</item>
+        <item name="android:shadowRadius">12</item>
+    </style>
+
+    <style name="MovieDetailsBigTitle" parent="Widget.AppCompat.TextView">
+        <item name="android:textSize">40sp</item>
+        <item name="android:textColor">@color/movie_details_title</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:shadowColor">@color/movie_title_shadow</item>
+        <item name="android:shadowDx">0</item>
+        <item name="android:shadowDy">6</item>
+        <item name="android:shadowRadius">12</item>
+        <item name="android:letterSpacing">-0.01</item>
+    </style>
+
+    <style name="MovieDetailsActorName" parent="Widget.AppCompat.TextView">
+        <item name="android:textSize">12sp</item>
+        <item name="android:textColor">@color/movie_details_actor_name</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:lineSpacingExtra">2sp</item>
+    </style>
+</resources>

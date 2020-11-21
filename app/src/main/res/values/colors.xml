@@ -13,4 +13,7 @@
     <color name="rating_progress">#FF3365</color>
     <color name="back_color">#80FFFFFF</color>
     <color name="color_movie_description">#BFFFFFFF</color>
+    <color name="movie_details_title">#ECECEC</color>
+    <color name="movie_details_actor_name">#D8D8D8</color>
+    <color name="movie_title_shadow">#80000000</color>
 </resources>
