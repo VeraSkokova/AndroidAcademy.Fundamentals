@@ -7,7 +7,7 @@
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
-    <color name="movie_details_background">#191926</color>
+    <color name="movies_background">#191926</color>
     <color name="color_tags">#FF3466</color>
     <color name="rating_background">#6D6D80</color>
     <color name="rating_progress">#FF3365</color>
@@ -16,4 +16,6 @@
     <color name="movie_details_title">#ECECEC</color>
     <color name="movie_details_actor_name">#D8D8D8</color>
     <color name="movie_title_shadow">#80000000</color>
+    <color name="movies_list_pg">#191926</color>
+    <color name="color_duration">#565665</color>
 </resources>

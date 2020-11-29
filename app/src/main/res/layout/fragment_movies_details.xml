@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/movie_details_background">
+    android:background="@color/movies_background">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -28,7 +28,8 @@
             app:layout_constraintEnd_toEndOf="@id/iv_poster"
             app:layout_constraintStart_toStartOf="@id/iv_poster"
             app:layout_constraintTop_toTopOf="@id/iv_poster"
-            app:srcCompat="@drawable/mask_poster" />
+            android:scaleType="fitXY"
+            app:srcCompat="@drawable/mask_movie_details" />
 
         <ImageView
             android:id="@+id/img_back"
