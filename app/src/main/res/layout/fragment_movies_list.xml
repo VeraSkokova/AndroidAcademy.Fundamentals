@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/movies_background">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tv_location"
+            style="@style/MoviesSmallTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="56dp"
+            android:drawablePadding="8dp"
+            android:text="@string/location"
+            app:drawableStartCompat="@drawable/ic_target" />
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/cv_movie"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            android:layout_marginTop="27dp"
+            android:backgroundTint="@color/movies_background"
+            app:cardCornerRadius="8dp"
+            app:cardElevation="24dp">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/movie_card_stroke"
+                android:padding="1dp">
+
+                <ImageView
+                    android:id="@+id/iv_movie"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:srcCompat="@drawable/avengers" />
+
+                <ImageView
+                    android:id="@+id/iv_movie_mask"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:scaleType="fitXY"
+                    app:layout_constraintBottom_toBottomOf="@id/iv_movie"
+                    app:layout_constraintEnd_toEndOf="@id/iv_movie"
+                    app:layout_constraintStart_toStartOf="@id/iv_movie"
+                    app:layout_constraintTop_toTopOf="@id/iv_movie"
+                    app:srcCompat="@drawable/mask_movie_list" />
+
+                <RatingBar
+                    android:id="@+id/rating"
+                    style="@style/MoviesListRatingBar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/movies_list_edge"
+                    app:layout_constraintBottom_toBottomOf="@id/tv_reviews"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="@id/tv_reviews" />
+
+                <TextView
+                    android:id="@+id/tv_reviews"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/small_margin"
+                    android:layout_marginEnd="@dimen/movie_details_start_end_margin"
+                    android:layout_marginBottom="10dp"
+                    android:lineSpacingExtra="4sp"
+                    android:text="@string/avengers_reviews_count"
+                    android:textAllCaps="true"
+                    android:textColor="@color/rating_background"
+                    android:textSize="8sp"
+                    android:textStyle="bold"
+                    app:layout_constraintBottom_toBottomOf="@id/iv_movie"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/rating" />
+
+                <TextView
+                    android:id="@+id/tv_tags"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/movies_list_edge"
+                    android:layout_marginEnd="@dimen/movies_list_edge"
+                    android:layout_marginBottom="4dp"
+                    android:lineSpacingExtra="4sp"
+                    android:text="@string/tags_avengers"
+                    android:textColor="@color/color_tags"
+                    android:textSize="8sp"
+                    app:layout_constraintBottom_toTopOf="@id/rating"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent" />
+
+                <ImageView
+                    android:id="@+id/iv_like"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="13dp"
+                    android:layout_marginEnd="@dimen/movies_list_edge"
+                    app:layout_constraintEnd_toEndOf="@id/iv_movie"
+                    app:layout_constraintTop_toTopOf="@id/iv_movie"
+                    app:srcCompat="@drawable/ic_like" />
+
+                <TextView
+                    android:id="@+id/tv_pg"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/movies_list_edge"
+                    android:layout_marginTop="8dp"
+                    android:background="@drawable/bg_pg"
+                    android:padding="4dp"
+                    android:text="@string/pg"
+                    android:textColor="@color/white"
+                    android:textSize="12sp"
+                    android:textStyle="bold"
+                    app:layout_constraintDimensionRatio="1"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/tv_movie_name"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:background="@color/movies_background"
+                    android:lineSpacingExtra="4sp"
+                    android:paddingStart="8dp"
+                    android:text="@string/list_avengers"
+                    android:textColor="@color/movie_details_title"
+                    android:textSize="12sp"
+                    android:textStyle="bold"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/iv_movie" />
+
+                <TextView
+                    android:id="@+id/tv_duration"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:background="@color/movies_background"
+                    android:paddingStart="8dp"
+                    android:paddingBottom="8dp"
+                    android:text="@string/avengers_duration"
+                    android:textColor="@color/color_duration"
+                    android:textSize="8sp"
+                    android:textStyle="bold"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/tv_movie_name" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+    </LinearLayout>
+</ScrollView>
