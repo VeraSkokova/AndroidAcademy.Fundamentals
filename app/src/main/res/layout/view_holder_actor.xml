@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:paddingTop="8dp"
+    android:paddingBottom="8dp"
+    app:layout_constraintVertical_chainStyle="packed"
+    tools:background="@color/movies_background">
+
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/img_actor"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:minHeight="80dp"
+        android:minWidth="80dp"
+        android:scaleType="centerCrop"
+        app:layout_constraintBottom_toTopOf="@id/tv_actor"
+        app:layout_constraintDimensionRatio="1"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:srcCompat="@drawable/robert_downey_jr"
+        app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.App.CornerSize10Percent"
+        tools:layout_marginEnd="@dimen/movie_details_start_end_margin"
+        tools:layout_marginStart="@dimen/movie_details_start_end_margin" />
+
+    <TextView
+        android:id="@+id/tv_actor"
+        style="@style/MovieDetailsActorName"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="6dp"
+        tools:text="@string/robert_downey_jr"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@id/img_actor"
+        app:layout_constraintStart_toStartOf="@id/img_actor"
+        app:layout_constraintTop_toBottomOf="@id/img_actor" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

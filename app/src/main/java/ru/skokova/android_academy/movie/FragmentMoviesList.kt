@@ -1,4 +1,4 @@
-package ru.skokova.android_academy
+package ru.skokova.android_academy.movie
 
 import android.content.Context
 import android.os.Bundle
@@ -6,10 +6,15 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import com.google.android.material.card.MaterialCardView
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import ru.skokova.android_academy.AdapterMovies
+import ru.skokova.android_academy.Metrics
+import ru.skokova.android_academy.R
 
-class FragmentMoviesList: Fragment() {
+class FragmentMoviesList : Fragment() {
     private var clickListener: MovieClickListener? = null
+    private var moviesAdapter: AdapterMovies? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -19,8 +24,11 @@ class FragmentMoviesList: Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        view.findViewById<MaterialCardView>(R.id.cv_movie).apply {
-            setOnClickListener { clickListener?.onClick() }
+        moviesAdapter = AdapterMovies(clickListener)
+        view.findViewById<RecyclerView>(R.id.rv_movies).apply {
+            layoutManager = GridLayoutManager(context, 2, RecyclerView.VERTICAL, false)
+            adapter = moviesAdapter
+            addItemDecoration(MoviesListDecoration(2, Metrics.dpToPx(12)))
         }
     }
 
@@ -34,11 +42,16 @@ class FragmentMoviesList: Fragment() {
         setMovieClickListener(null)
     }
 
+    override fun onStart() {
+        super.onStart()
+        moviesAdapter?.bindMovies(MovieGenerator(context).getMovies())
+    }
+
     private fun setMovieClickListener(listener: MovieClickListener?) {
         clickListener = listener
     }
 
     interface MovieClickListener {
-        fun onClick()
+        fun onClick(id: Int)
     }
 }

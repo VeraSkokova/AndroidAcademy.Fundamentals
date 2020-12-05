@@ -1,7 +1,9 @@
 package ru.skokova.android_academy
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.appcompat.app.AppCompatActivity
+import ru.skokova.android_academy.movie.FragmentMoviesDetails
+import ru.skokova.android_academy.movie.FragmentMoviesList
 
 class MainActivity : AppCompatActivity(), FragmentMoviesList.MovieClickListener {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -17,10 +19,10 @@ class MainActivity : AppCompatActivity(), FragmentMoviesList.MovieClickListener 
         }
     }
 
-    override fun onClick() {
+    override fun onClick(id: Int) {
         supportFragmentManager.beginTransaction()
             .apply {
-                add(R.id.container, FragmentMoviesDetails())
+                replace(R.id.container, FragmentMoviesDetails.newInstance(id))
                 addToBackStack(null)
                 commit()
             }
