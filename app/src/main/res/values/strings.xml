@@ -16,4 +16,12 @@
     <string name="location">Movies list</string>
     <string name="list_avengers">Avengers: End Game</string>
     <string name="avengers_duration">137 min</string>
+
+    <!--Movies-->
+    <string name="movie_duration">%s min</string>
+    <plurals name="movie_reviews">
+        <item quantity="one">%d review</item>
+        <item quantity="other">%d reviews</item>
+    </plurals>
+    <!--Movies-->
 </resources>
