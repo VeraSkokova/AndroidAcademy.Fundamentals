@@ -7,7 +7,6 @@ import android.widget.ImageView
 import android.widget.RatingBar
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import ru.skokova.android_academy.movie.FragmentMoviesList
 import ru.skokova.android_academy.movie.Movie
 
 class AdapterMovies(private val clickListener: FragmentMoviesList.MovieClickListener?) : RecyclerView.Adapter<MovieViewHolder>() {

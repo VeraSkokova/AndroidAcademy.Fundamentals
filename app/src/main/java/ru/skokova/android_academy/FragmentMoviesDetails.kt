@@ -1,4 +1,4 @@
-package ru.skokova.android_academy.movie
+package ru.skokova.android_academy
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -10,11 +10,9 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import ru.skokova.android_academy.AdapterActors
-import ru.skokova.android_academy.Metrics
-import ru.skokova.android_academy.R
 import ru.skokova.android_academy.actor.ActorGenerator
 import ru.skokova.android_academy.actor.ActorListDecoration
+import ru.skokova.android_academy.movie.MovieGenerator
 
 class FragmentMoviesDetails : Fragment() {
     private val actorsAdapter = AdapterActors()

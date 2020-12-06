@@ -1,4 +1,4 @@
-package ru.skokova.android_academy.movie
+package ru.skokova.android_academy
 
 import android.content.Context
 import android.os.Bundle
@@ -8,9 +8,8 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import ru.skokova.android_academy.AdapterMovies
-import ru.skokova.android_academy.Metrics
-import ru.skokova.android_academy.R
+import ru.skokova.android_academy.movie.MovieGenerator
+import ru.skokova.android_academy.movie.MoviesListDecoration
 
 class FragmentMoviesList : Fragment() {
     private var clickListener: MovieClickListener? = null
