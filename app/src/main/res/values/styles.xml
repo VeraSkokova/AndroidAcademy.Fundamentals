@@ -1,5 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <style name="MoviesSmallTitle" parent="Widget.AppCompat.TextView">
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">@color/movie_details_title</item>
+        <item name="fontWeight">900</item>
+        <item name="lineHeight">20sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
     <style name="MovieDetailsSmallTitle" parent="Widget.AppCompat.TextView">
         <item name="android:textSize">14sp</item>
         <item name="android:textColor">@color/movie_details_title</item>
@@ -28,5 +36,19 @@
         <item name="android:textColor">@color/movie_details_actor_name</item>
         <item name="android:textStyle">bold</item>
         <item name="android:lineSpacingExtra">2sp</item>
+    </style>
+
+    <style name="MoviesListRatingBar" parent="Widget.AppCompat.RatingBar.Small">
+        <item name="android:minHeight">8dp</item>
+        <item name="android:maxHeight">8dp</item>
+        <item name="android:numStars">5</item>
+        <item name="android:rating">4</item>
+        <item name="android:progressDrawable">@drawable/rating_movie_list</item>
+        <item name="android:indeterminateDrawable">@drawable/rating_movie_list</item>
+        <item name="android:isIndicator">true</item>
+    </style>
+
+    <style name="ShapeAppearanceOverlay.App.CornerSize10Percent" parent="">
+        <item name="cornerSize">10%</item>
     </style>
 </resources>

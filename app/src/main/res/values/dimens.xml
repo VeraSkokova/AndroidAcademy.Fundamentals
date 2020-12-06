@@ -5,4 +5,5 @@
     <dimen name="movie_details_bottom_margin">108dp</dimen>
     <dimen name="small_margin">4dp</dimen>
     <dimen name="big_margin">24dp</dimen>
+    <dimen name="movies_list_edge">6dp</dimen>
 </resources>
