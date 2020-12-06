@@ -38,8 +38,8 @@ class ActorGenerator {
             Actor("Gal Gadot", R.drawable.gal_gadot),
             Actor("Chris Pine", R.drawable.chris_pine),
             Actor("Kristen Wiig", R.drawable.kristen_wiig),
-            Actor("Connie Nielsen", R.drawable.connie_nilsen),
-            Actor("Pedro Pascal", R.drawable.pedro_pascal)
+            Actor("Pedro Pascal", R.drawable.pedro_pascal),
+            Actor("Connie Nielsen", R.drawable.connie_nilsen)
         )
     )
 
