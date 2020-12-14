@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/movies_background">
@@ -27,7 +28,6 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="12dp"
             android:layout_marginTop="27dp"
-            android:backgroundTint="@color/movies_background"
             app:cardCornerRadius="8dp"
             app:cardElevation="24dp">
 
@@ -82,7 +82,8 @@
                     android:textStyle="bold"
                     app:layout_constraintBottom_toBottomOf="@id/iv_movie"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@id/rating" />
+                    app:layout_constraintStart_toEndOf="@id/rating"
+                    tools:ignore="SmallSp" />
 
                 <TextView
                     android:id="@+id/tv_tags"
@@ -97,7 +98,8 @@
                     android:textSize="8sp"
                     app:layout_constraintBottom_toTopOf="@id/rating"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent" />
+                    app:layout_constraintStart_toStartOf="parent"
+                    tools:ignore="SmallSp" />
 
                 <ImageView
                     android:id="@+id/iv_like"
@@ -132,6 +134,7 @@
                     android:background="@color/movies_background"
                     android:lineSpacingExtra="4sp"
                     android:paddingStart="8dp"
+                    android:paddingEnd="8dp"
                     android:text="@string/list_avengers"
                     android:textColor="@color/movie_details_title"
                     android:textSize="12sp"
@@ -146,6 +149,7 @@
                     android:layout_height="wrap_content"
                     android:background="@color/movies_background"
                     android:paddingStart="8dp"
+                    android:paddingEnd="8dp"
                     android:paddingBottom="8dp"
                     android:text="@string/avengers_duration"
                     android:textColor="@color/color_duration"
@@ -154,7 +158,8 @@
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/tv_movie_name" />
+                    app:layout_constraintTop_toBottomOf="@id/tv_movie_name"
+                    tools:ignore="SmallSp" />
             </androidx.constraintlayout.widget.ConstraintLayout>
         </com.google.android.material.card.MaterialCardView>
 

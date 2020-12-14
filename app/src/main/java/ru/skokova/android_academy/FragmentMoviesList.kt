@@ -8,7 +8,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.google.android.material.card.MaterialCardView
 
-class FragmentMoviesList: Fragment() {
+class FragmentMoviesList : Fragment() {
     private var clickListener: MovieClickListener? = null
 
     override fun onCreateView(
@@ -19,23 +19,18 @@ class FragmentMoviesList: Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        view.findViewById<MaterialCardView>(R.id.cv_movie).apply {
-            setOnClickListener { clickListener?.onClick() }
-        }
+        view.findViewById<MaterialCardView>(R.id.cv_movie)
+            .setOnClickListener { clickListener?.onClick() }
     }
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        setMovieClickListener(activity as MovieClickListener)
+        clickListener = activity as MovieClickListener
     }
 
     override fun onDetach() {
         super.onDetach()
-        setMovieClickListener(null)
-    }
-
-    private fun setMovieClickListener(listener: MovieClickListener?) {
-        clickListener = listener
+        clickListener = null
     }
 
     interface MovieClickListener {
