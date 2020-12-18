@@ -7,10 +7,10 @@ class Movie(
     @DrawableRes val listPoster: Int,
     @DrawableRes val detailsPoster: Int,
     val rating: Float,
-    val reviews: String,
+    val reviews: Int,
     val tags: String,
     @DrawableRes val like: Int,
     val pg: String,
-    val duration: String,
+    val duration: Int,
     val description: String
 )

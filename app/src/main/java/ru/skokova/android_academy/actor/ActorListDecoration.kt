@@ -12,10 +12,8 @@ class ActorListDecoration(private val space: Int) : RecyclerView.ItemDecoration(
         state: RecyclerView.State
     ) {
         super.getItemOffsets(outRect, view, parent, state)
-        with(outRect) {
-            if (parent.getChildAdapterPosition(view) != 0) {
-                left = space
-            }
+        if (parent.getChildAdapterPosition(view) != 0) {
+            outRect.left = space
         }
     }
 }

@@ -1,4 +1,4 @@
-package ru.skokova.android_academy
+package ru.skokova.android_academy.actor
 
 import android.view.LayoutInflater
 import android.view.View
@@ -6,10 +6,11 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import ru.skokova.android_academy.actor.Actor
+import ru.skokova.android_academy.R
 
 class AdapterActors : RecyclerView.Adapter<ActorViewHolder>() {
-    private var actors = listOf<Actor>()
+    private var actors: List<Actor> =
+        listOf()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ActorViewHolder {
         return ActorViewHolder(
@@ -18,12 +19,12 @@ class AdapterActors : RecyclerView.Adapter<ActorViewHolder>() {
     }
 
     override fun onBindViewHolder(holder: ActorViewHolder, position: Int) {
-        holder.bind(actors[position])
+        holder.bind(actors.getOrNull(position))
     }
 
     override fun getItemCount() = actors.size
 
-    fun bindActors(actors: List<Actor>) {
+    fun updateActors(actors: List<Actor>) {
         this.actors = actors
         notifyDataSetChanged()
     }
@@ -33,8 +34,11 @@ class ActorViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
     private val photo = itemView.findViewById<ImageView>(R.id.img_actor)
     private val name = itemView.findViewById<TextView>(R.id.tv_actor)
 
-    fun bind(actor: Actor) {
-        name.text = actor.name
-        photo.setImageResource(actor.photo)
+    fun bind(actor: Actor?) {
+        actor?.let { it ->
+            name.text = it.name
+            photo.visibility = View.VISIBLE
+            photo.setImageResource(it.photo)
+        }
     }
 }

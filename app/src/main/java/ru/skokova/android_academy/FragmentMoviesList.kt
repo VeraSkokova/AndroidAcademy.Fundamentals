@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import ru.skokova.android_academy.movie.AdapterMovies
 import ru.skokova.android_academy.movie.MovieGenerator
 import ru.skokova.android_academy.movie.MoviesListDecoration
 
@@ -25,32 +26,37 @@ class FragmentMoviesList : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         moviesAdapter = AdapterMovies(clickListener)
         view.findViewById<RecyclerView>(R.id.rv_movies).apply {
-            layoutManager = GridLayoutManager(context, 2, RecyclerView.VERTICAL, false)
+            layoutManager = GridLayoutManager(context, COLUMNS_COUNT, RecyclerView.VERTICAL, false)
             adapter = moviesAdapter
-            addItemDecoration(MoviesListDecoration(2, Metrics.dpToPx(12)))
+            addItemDecoration(
+                MoviesListDecoration(
+                    2,
+                    context.resources.getDimension(R.dimen.movie_list_decor_margin).toInt()
+                )
+            )
         }
     }
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        setMovieClickListener(activity as MovieClickListener)
+        clickListener = activity as MovieClickListener
     }
 
     override fun onDetach() {
+        clickListener = null
         super.onDetach()
-        setMovieClickListener(null)
     }
 
     override fun onStart() {
         super.onStart()
-        moviesAdapter?.bindMovies(MovieGenerator(context).getMovies())
-    }
-
-    private fun setMovieClickListener(listener: MovieClickListener?) {
-        clickListener = listener
+        moviesAdapter?.updateMovies(MovieGenerator.getMovies())
     }
 
     interface MovieClickListener {
         fun onClick(id: Int)
+    }
+
+    companion object {
+        private const val COLUMNS_COUNT = 2
     }
 }
