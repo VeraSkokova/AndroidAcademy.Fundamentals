@@ -65,7 +65,7 @@ class FragmentMoviesDetails : Fragment() {
 
     override fun onStart() {
         super.onStart()
-        actorsAdapter.updateActors(ActorGenerator().getActorsById(arguments?.getInt(MOVIE_ID) ?: 0))
+        actorsAdapter.updateActors(ActorGenerator.getActorsById(arguments?.getInt(MOVIE_ID) ?: 0))
     }
 
     override fun onAttach(context: Context) {

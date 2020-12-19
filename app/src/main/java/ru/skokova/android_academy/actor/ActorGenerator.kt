@@ -2,7 +2,7 @@ package ru.skokova.android_academy.actor
 
 import ru.skokova.android_academy.R
 
-class ActorGenerator {
+object ActorGenerator {
     private val actors =
         hashMapOf(
             0 to listOf(
