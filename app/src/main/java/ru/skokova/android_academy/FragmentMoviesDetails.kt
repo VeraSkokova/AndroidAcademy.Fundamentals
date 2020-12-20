@@ -55,11 +55,9 @@ class FragmentMoviesDetails : Fragment() {
 
         val movieId = arguments?.getInt(MOVIE_ID)
         movieId?.let {
-            context?.let {
-                scope.launch {
-                    loadMovie(movieId, context!!)?.let { movie ->
-                        updateMovieInformation(view, movie)
-                    }
+            scope.launch {
+                loadMovie(movieId, context!!)?.let { movie ->
+                    updateMovieInformation(view, movie)
                 }
             }
         }
@@ -71,7 +69,7 @@ class FragmentMoviesDetails : Fragment() {
     ) {
         view.findViewById<TextView>(R.id.tv_movie_name).text = movie.title
         view.findViewById<TextView>(R.id.tv_pg).text =
-            context!!.resources.getString(R.string.pg, movie.minimumAge)
+            context?.resources?.getString(R.string.pg, movie.minimumAge)
         view.findViewById<TextView>(R.id.tv_tags).text = movie.genres
         view.findViewById<RatingBar>(R.id.rating).rating = movie.ratings
         view.findViewById<TextView>(R.id.tv_reviews).text =
@@ -81,7 +79,7 @@ class FragmentMoviesDetails : Fragment() {
                 movie.numberOfRatings
             )
         view.findViewById<TextView>(R.id.tv_description).text = movie.overview
-        Glide.with(context)
+        Glide.with(this)
             .load(movie.backdrop)
             .apply(imageOption)
             .into(view.findViewById(R.id.iv_poster))

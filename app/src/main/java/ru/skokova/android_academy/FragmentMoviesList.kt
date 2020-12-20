@@ -10,10 +10,15 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
+import com.bumptech.glide.integration.recyclerview.RecyclerViewPreloader
+import com.bumptech.glide.util.ViewPreloadSizeProvider
 import kotlinx.coroutines.*
+import ru.skokova.android_academy.data.Movie
 import ru.skokova.android_academy.data.loadMovies
 import ru.skokova.android_academy.movie.AdapterMovies
 import ru.skokova.android_academy.movie.MoviesListDecoration
+
 
 class FragmentMoviesList : Fragment() {
     private var clickListener: MovieClickListener? = null
@@ -33,16 +38,25 @@ class FragmentMoviesList : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        moviesAdapter = AdapterMovies(clickListener)
+        moviesAdapter = AdapterMovies(clickListener, Glide.with(this))
+        moviesAdapter?.setHasStableIds(true)
+        val preloadSizeProvider = ViewPreloadSizeProvider<Movie>()
+        val recyclerViewPreloader = RecyclerViewPreloader(
+            Glide.with(this),
+            moviesAdapter!!,
+            preloadSizeProvider,
+            5
+        )
         view.findViewById<RecyclerView>(R.id.rv_movies).apply {
             layoutManager = GridLayoutManager(context, COLUMNS_COUNT, RecyclerView.VERTICAL, false)
             adapter = moviesAdapter
             addItemDecoration(
                 MoviesListDecoration(
-                    2,
+                    COLUMNS_COUNT,
                     context.resources.getDimension(R.dimen.movie_list_decor_margin).toInt()
                 )
             )
+            addOnScrollListener(recyclerViewPreloader)
         }
     }
 

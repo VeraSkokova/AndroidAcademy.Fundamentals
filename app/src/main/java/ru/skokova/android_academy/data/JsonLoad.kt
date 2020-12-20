@@ -112,7 +112,7 @@ internal suspend fun parseMovie(
     val jsonMovies = jsonFormat.decodeFromString<List<JsonMovie>>(data)
 
     val jsonMovie = jsonMovies.find { jsonMovie -> jsonMovie.id == id }
-    jsonMovie?.let { it ->
+    jsonMovie?.let { _ ->
         toMovie(jsonMovie, genresMap, actorsMap)
     }
 }
@@ -126,7 +126,7 @@ private fun toMovie(
     overview = jsonMovie.overview,
     poster = jsonMovie.posterPicture,
     backdrop = jsonMovie.backdropPicture,
-    ratings = jsonMovie.ratings / 2,
+    ratings = jsonMovie.ratings / RATING_RATIO,
     numberOfRatings = jsonMovie.votesCount,
     minimumAge = if (jsonMovie.adult) 16 else 13,
     runtime = jsonMovie.runtime,
@@ -138,3 +138,5 @@ private fun toMovie(
     actors = jsonMovie.actors.map {
         actorsMap[it] ?: throw IllegalArgumentException("Actor not found")
     })
+
+const val RATING_RATIO = 2
