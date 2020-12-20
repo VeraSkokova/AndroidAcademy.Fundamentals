@@ -45,7 +45,7 @@ class FragmentMoviesList : Fragment() {
             Glide.with(this),
             moviesAdapter!!,
             preloadSizeProvider,
-            5
+            PRELOAD_COUNT
         )
         view.findViewById<RecyclerView>(R.id.rv_movies).apply {
             layoutManager = GridLayoutManager(context, COLUMNS_COUNT, RecyclerView.VERTICAL, false)
@@ -93,5 +93,6 @@ class FragmentMoviesList : Fragment() {
     companion object {
         private const val COLUMNS_COUNT = 2
         private const val ERROR_TAG = "COROUTINE_ERROR"
+        private const val PRELOAD_COUNT = 7
     }
 }
