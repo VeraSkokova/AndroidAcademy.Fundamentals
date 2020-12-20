@@ -2,7 +2,7 @@
     <string name="app_name">AndroidAcademy.Fundamentals</string>
     <string name="movie_poster">Movie poster</string>
     <string name="back">Back</string>
-    <string name="pg">13+</string>
+    <string name="avengers_pg">13+</string>
     <string name="avengers_movie">Avengers:\nEnd Game</string>
     <string name="tags_avengers">Action, Adventure, Fantasy</string>
     <string name="avengers_reviews_count">125 reviews</string>
@@ -23,5 +23,8 @@
         <item quantity="one">%d review</item>
         <item quantity="other">%d reviews</item>
     </plurals>
+    <string name="pg">%d+</string>
     <!--Movies-->
+
+    <string name="load_error">Something went wrong, please try again later</string>
 </resources>

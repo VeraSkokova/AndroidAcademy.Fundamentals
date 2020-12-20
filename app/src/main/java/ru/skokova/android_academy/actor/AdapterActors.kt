@@ -6,7 +6,10 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
+import com.bumptech.glide.request.RequestOptions
 import ru.skokova.android_academy.R
+import ru.skokova.android_academy.data.Actor
 
 class AdapterActors : RecyclerView.Adapter<ActorViewHolder>() {
     private var actors: List<Actor> =
@@ -38,7 +41,15 @@ class ActorViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         actor?.let { it ->
             name.text = it.name
             photo.visibility = View.VISIBLE
-            photo.setImageResource(it.photo)
+            Glide.with(itemView.context)
+                .load(actor.picture)
+                .apply(imageOption)
+                .into(photo)
         }
     }
+
+    private val imageOption = RequestOptions()
+        .placeholder(R.drawable.ic_baseline_movie)
+        .fallback(R.drawable.ic_baseline_movie)
+        .centerCrop()
 }

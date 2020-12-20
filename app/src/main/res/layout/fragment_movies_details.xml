@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/movies_background">
@@ -14,23 +15,23 @@
             android:id="@+id/iv_poster"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:minHeight="298dp"
             android:contentDescription="@string/movie_poster"
+            android:minHeight="298dp"
             android:scaleType="centerCrop"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/orig" />
+            tools:srcCompat="@drawable/orig" />
 
         <ImageView
             android:id="@+id/poster_mask"
             android:layout_width="0dp"
             android:layout_height="0dp"
+            android:scaleType="fitXY"
             app:layout_constraintBottom_toBottomOf="@id/iv_poster"
             app:layout_constraintEnd_toEndOf="@id/iv_poster"
             app:layout_constraintStart_toStartOf="@id/iv_poster"
             app:layout_constraintTop_toTopOf="@id/iv_poster"
-            android:scaleType="fitXY"
             app:srcCompat="@drawable/mask_movie_details" />
 
         <ImageView
@@ -61,11 +62,11 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/movie_details_start_end_margin"
             android:layout_marginBottom="56dp"
-            android:text="@string/pg"
             android:textColor="@color/white"
             android:textSize="12sp"
             app:layout_constraintBottom_toBottomOf="@id/iv_poster"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintStart_toStartOf="parent"
+            tools:text="@string/pg" />
 
         <TextView
             android:id="@+id/tv_movie_name"
@@ -75,10 +76,10 @@
             android:layout_marginStart="@dimen/movie_details_start_end_margin"
             android:layout_marginTop="12dp"
             android:layout_marginEnd="@dimen/movie_details_start_end_margin"
-            android:text="@string/avengers_movie"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tv_pg" />
+            app:layout_constraintTop_toBottomOf="@id/tv_pg"
+            tools:text="@string/avengers_movie" />
 
         <TextView
             android:id="@+id/tv_tags"
@@ -88,12 +89,12 @@
             android:layout_marginTop="@dimen/small_margin"
             android:layout_marginEnd="@dimen/movie_details_start_end_margin"
             android:lineSpacingExtra="4sp"
-            android:text="@string/tags_avengers"
             android:textColor="@color/color_tags"
             android:textSize="14sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tv_movie_name" />
+            app:layout_constraintTop_toBottomOf="@id/tv_movie_name"
+            tools:text="@string/tags_avengers" />
 
         <RatingBar
             android:id="@+id/rating"
@@ -119,13 +120,13 @@
             android:layout_marginTop="@dimen/small_margin"
             android:layout_marginEnd="@dimen/movie_details_start_end_margin"
             android:lineSpacingExtra="4sp"
-            android:text="@string/avengers_reviews_count"
             android:textColor="@color/rating_background"
             android:textSize="14sp"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/rating"
-            app:layout_constraintTop_toBottomOf="@id/tv_tags" />
+            app:layout_constraintTop_toBottomOf="@id/tv_tags"
+            tools:text="@string/avengers_reviews_count" />
 
         <TextView
             android:id="@+id/tv_storyline_title"
@@ -148,12 +149,12 @@
             android:layout_marginTop="12dp"
             android:layout_marginEnd="@dimen/movie_details_start_end_margin"
             android:lineSpacingExtra="4sp"
-            android:text="@string/avengers_description"
             android:textColor="@color/color_movie_description"
             android:textSize="14sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tv_storyline_title" />
+            app:layout_constraintTop_toBottomOf="@id/tv_storyline_title"
+            tools:text="@string/avengers_description" />
 
         <TextView
             android:id="@+id/tv_cast_title"
@@ -172,11 +173,11 @@
             android:id="@+id/rv_actors"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginTop="8dp"
             android:layout_marginStart="@dimen/movie_details_start_end_margin"
+            android:layout_marginTop="8dp"
             android:layout_marginEnd="@dimen/movie_details_start_end_margin"
-            app:layout_constraintTop_toBottomOf="@id/tv_cast_title"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"/>
+            app:layout_constraintTop_toBottomOf="@id/tv_cast_title" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>
