@@ -13,4 +13,15 @@
     <string name="chris_evans">Chris Evans</string>
     <string name="mark_ruffalo">Mark Ruffalo</string>
     <string name="chris_hemsworth">Chris Hemsworth</string>
+    <string name="location">Movies list</string>
+    <string name="list_avengers">Avengers: End Game</string>
+    <string name="avengers_duration">137 min</string>
+
+    <!--Movies-->
+    <string name="movie_duration">%d min</string>
+    <plurals name="movie_reviews">
+        <item quantity="one">%d review</item>
+        <item quantity="other">%d reviews</item>
+    </plurals>
+    <!--Movies-->
 </resources>
