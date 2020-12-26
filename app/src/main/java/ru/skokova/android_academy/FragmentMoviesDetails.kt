@@ -26,8 +26,9 @@ class FragmentMoviesDetails : Fragment() {
 
     private val exceptionHandler = CoroutineExceptionHandler { coroutineContext, exception ->
         Toast.makeText(context, R.string.load_error, Toast.LENGTH_SHORT).show()
-        Log.w(ERROR_TAG, "CoroutineExceptionHandler got $exception in $coroutineContext")
+        Log.e(ERROR_TAG, "CoroutineExceptionHandler got $exception in $coroutineContext")
     }
+
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Main + exceptionHandler)
 
     override fun onCreateView(
@@ -54,9 +55,12 @@ class FragmentMoviesDetails : Fragment() {
         }
 
         val movieId = arguments?.getInt(MOVIE_ID)
-        movieId?.let {
+        if (movieId == null) {
+            Toast.makeText(context, R.string.load_error, Toast.LENGTH_SHORT).show()
+            navigationListener?.onBackPressed()
+        } else {
             scope.launch {
-                loadMovie(movieId, context!!)?.let { movie ->
+                loadMovie(movieId, requireContext())?.let { movie ->
                     updateMovieInformation(view, movie)
                 }
             }

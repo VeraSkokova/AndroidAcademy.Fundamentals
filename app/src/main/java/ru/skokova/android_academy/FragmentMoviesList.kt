@@ -28,6 +28,7 @@ class FragmentMoviesList : Fragment() {
         Toast.makeText(context, R.string.load_error, Toast.LENGTH_SHORT).show()
         Log.w(ERROR_TAG, "CoroutineExceptionHandler got $exception in $coroutineContext")
     }
+
     private var scope = CoroutineScope(SupervisorJob() + Dispatchers.Main + exceptionHandler)
 
     override fun onCreateView(
@@ -72,17 +73,14 @@ class FragmentMoviesList : Fragment() {
 
     override fun onDestroyView() {
         scope.cancel()
-        scope = CoroutineScope(SupervisorJob() + Dispatchers.Main + exceptionHandler)
         super.onDestroyView()
     }
 
     override fun onStart() {
         super.onStart()
-        context?.let {
-            scope.launch {
-                val loadMovies = loadMovies(it)
-                moviesAdapter?.updateMovies(loadMovies)
-            }
+        scope.launch {
+            val loadMovies = loadMovies(requireContext())
+            moviesAdapter?.updateMovies(loadMovies)
         }
     }
 
