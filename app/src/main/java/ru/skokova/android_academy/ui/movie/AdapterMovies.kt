@@ -1,4 +1,4 @@
-package ru.skokova.android_academy.movie
+package ru.skokova.android_academy.ui.movie
 
 import android.view.LayoutInflater
 import android.view.View
@@ -12,9 +12,9 @@ import com.bumptech.glide.ListPreloader
 import com.bumptech.glide.RequestBuilder
 import com.bumptech.glide.RequestManager
 import com.bumptech.glide.request.RequestOptions
-import ru.skokova.android_academy.FragmentMoviesList
 import ru.skokova.android_academy.R
 import ru.skokova.android_academy.data.Movie
+import ru.skokova.android_academy.ui.FragmentMoviesList
 
 class AdapterMovies(
     private val clickListener: FragmentMoviesList.MovieClickListener?,

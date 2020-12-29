@@ -1,4 +1,4 @@
-package ru.skokova.android_academy.actor
+package ru.skokova.android_academy.ui.actor
 
 import android.graphics.Rect
 import android.view.View
