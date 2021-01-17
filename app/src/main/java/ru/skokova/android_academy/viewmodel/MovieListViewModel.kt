@@ -20,14 +20,13 @@ class MovieListViewModel(private val movieListInteractor: MovieListInteractor) :
         Log.e(ERROR_TAG, "CoroutineExceptionHandler got $exception in $coroutineContext")
     }
 
-    fun getMovies(): LiveData<Resource<List<Movie>>> {
+    init {
         if (mutableMoviesLiveData.value == null) {
             viewModelScope.launch(exceptionHandler) {
                 val movies = movieListInteractor.getMovies()
                 mutableMoviesLiveData.value = Resource.Success(movies)
             }
         }
-        return moviesLiveData
     }
 
     companion object {

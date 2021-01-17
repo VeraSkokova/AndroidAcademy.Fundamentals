@@ -38,8 +38,6 @@ class FragmentMoviesList : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewModel.getMovies()
-
         moviesAdapter = AdapterMovies(clickListener, Glide.with(this))
         moviesAdapter?.setHasStableIds(true)
         val preloadSizeProvider = ViewPreloadSizeProvider<Movie>()
@@ -60,6 +58,20 @@ class FragmentMoviesList : Fragment() {
             )
             addOnScrollListener(recyclerViewPreloader)
         }
+
+        viewModel.moviesLiveData.observe(
+            viewLifecycleOwner,
+            { resource ->
+                when (resource) {
+                    is Resource.Success -> moviesAdapter?.updateMovies(resource.data)
+                    is Resource.Error -> Toast.makeText(
+                        context,
+                        resource.message,
+                        Toast.LENGTH_SHORT
+                    )
+                        .show()
+                }
+            })
     }
 
     override fun onAttach(context: Context) {
@@ -70,20 +82,6 @@ class FragmentMoviesList : Fragment() {
     override fun onDetach() {
         clickListener = null
         super.onDetach()
-    }
-
-    override fun onStart() {
-        super.onStart()
-        viewModel.moviesLiveData.observe(
-            viewLifecycleOwner,
-            {
-                when (it) {
-                    is Resource.Success -> moviesAdapter?.updateMovies(it.data!!)
-                    is Resource.Error -> Toast.makeText(context, it.message!!, Toast.LENGTH_SHORT)
-                        .show()
-                }
-            })
-
     }
 
     interface MovieClickListener {

@@ -53,7 +53,7 @@ class FragmentMoviesDetails : Fragment() {
 
         val movieId = arguments?.getInt(MOVIE_ID)
         movieId?.let {
-            viewModel.getMovieDetails(movieId)
+            viewModel::getMovieDetails
         } ?: run {
             Toast.makeText(context, R.string.load_error, Toast.LENGTH_SHORT).show()
             navigationListener?.onBackPressed()
@@ -61,8 +61,8 @@ class FragmentMoviesDetails : Fragment() {
 
         viewModel.movieDetailsLiveData.observe(viewLifecycleOwner, { resource ->
             when (resource) {
-                is Resource.Success -> updateMovieInformation(view, resource.data!!)
-                is Resource.Error -> Toast.makeText(context, resource.message!!, Toast.LENGTH_SHORT)
+                is Resource.Success -> updateMovieInformation(view, resource.data)
+                is Resource.Error -> Toast.makeText(context, resource.message, Toast.LENGTH_SHORT)
                     .show()
             }
         })

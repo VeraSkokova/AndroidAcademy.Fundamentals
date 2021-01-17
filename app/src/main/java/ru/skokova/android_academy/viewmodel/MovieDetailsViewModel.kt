@@ -24,11 +24,9 @@ class MovieDetailsViewModel(private val movieDetailsInteractor: MovieDetailsInte
     fun getMovieDetails(id: Int) {
         viewModelScope.launch(exceptionHandler) {
             val movie = movieDetailsInteractor.getMovieById(id)
-            movie?.let {
-                mutableMovieDetailsLiveData.value = Resource.Success(movie)
-            } ?: run {
-                mutableMovieDetailsLiveData.value = Resource.Error(NULL_MESSAGE)
-            }
+            mutableMovieDetailsLiveData.value = movie?.let {
+                Resource.Success(movie)
+            } ?: Resource.Error(NULL_MESSAGE)
         }
     }
 
