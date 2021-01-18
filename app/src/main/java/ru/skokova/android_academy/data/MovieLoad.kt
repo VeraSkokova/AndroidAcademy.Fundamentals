@@ -1,23 +1,25 @@
 package ru.skokova.android_academy.data
 
-import ru.skokova.android_academy.MoviesApplication
+import ru.skokova.android_academy.data.network.MovieDetailsResponse
+import ru.skokova.android_academy.data.network.MovieListResponse
+import ru.skokova.android_academy.data.network.RetrofitModule
 
 interface MovieListRepository {
-    fun loadMovies(): List<Movie>
+    suspend fun loadMovies(): MovieListResponse
 }
 
-class JsonMovieLoader : MovieListRepository {
-    override fun loadMovies(): List<Movie> {
-        return loadMovies(context = MoviesApplication.context)
+class NetworkMovieLoader : MovieListRepository {
+    override suspend fun loadMovies(): MovieListResponse {
+        return RetrofitModule.moviesApi.getMovies()
     }
 }
 
 interface MovieDetailsRepository {
-    fun loadMovie(id: Int): Movie?
+    suspend fun loadMovie(id: Int): MovieDetailsResponse
 }
 
-class JsonMovieDetailsLoader : MovieDetailsRepository {
-    override fun loadMovie(id: Int): Movie? {
-        return loadMovie(id, MoviesApplication.context)
+class NetworkMovieDetailsLoader : MovieDetailsRepository {
+    override suspend fun loadMovie(id: Int): MovieDetailsResponse {
+        return RetrofitModule.moviesApi.getMovie(id)
     }
 }

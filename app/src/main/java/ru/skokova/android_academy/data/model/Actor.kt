@@ -1,4 +1,4 @@
-package ru.skokova.android_academy.data
+package ru.skokova.android_academy.data.model
 
 data class Actor(
     val id: Int,

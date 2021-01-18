@@ -13,7 +13,7 @@ import com.bumptech.glide.RequestBuilder
 import com.bumptech.glide.RequestManager
 import com.bumptech.glide.request.RequestOptions
 import ru.skokova.android_academy.R
-import ru.skokova.android_academy.data.Movie
+import ru.skokova.android_academy.data.model.Movie
 import ru.skokova.android_academy.ui.FragmentMoviesList
 
 class AdapterMovies(
@@ -22,6 +22,7 @@ class AdapterMovies(
 ) :
     RecyclerView.Adapter<MovieViewHolder>(), ListPreloader.PreloadModelProvider<Movie> {
     private var movies = listOf<Movie>()
+    private lateinit var baseUrl: String
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MovieViewHolder {
         return MovieViewHolder(
@@ -30,7 +31,7 @@ class AdapterMovies(
     }
 
     override fun onBindViewHolder(holder: MovieViewHolder, position: Int) {
-        holder.bind(movies.getOrNull(position))
+        holder.bind(movies.getOrNull(position), baseUrl)
         holder.itemView.setOnClickListener {
             movies.getOrNull(position)?.id?.let { pos ->
                 clickListener?.onClick(pos)
@@ -44,8 +45,9 @@ class AdapterMovies(
         return movies.getOrNull(position)?.id?.toLong() ?: 0
     }
 
-    fun updateMovies(movies: List<Movie>) {
+    fun updateMovies(movies: List<Movie>, baseUrl: String) {
         this.movies = movies
+        this.baseUrl = baseUrl
         notifyDataSetChanged()
     }
 
@@ -71,12 +73,11 @@ class MovieViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
     private val like = itemView.findViewById<ImageView>(R.id.iv_like)
     private val pg = itemView.findViewById<TextView>(R.id.tv_pg)
     private val name = itemView.findViewById<TextView>(R.id.tv_movie_name)
-    private val duration = itemView.findViewById<TextView>(R.id.tv_duration)
 
-    fun bind(movie: Movie?) {
+    fun bind(movie: Movie?, baseUrl: String) {
         movie?.let {
             Glide.with(itemView.context)
-                .load(movie.poster)
+                .load(baseUrl + movie.poster)
                 .apply(imageOption)
                 .into(poster)
             rating.rating = movie.ratings
@@ -89,7 +90,6 @@ class MovieViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
             like.setImageResource(R.drawable.ic_like)
             pg.text = itemView.resources.getString(R.string.pg, movie.minimumAge)
             name.text = movie.title
-            duration.text = itemView.context.getString(R.string.movie_duration, movie.runtime)
         }
     }
 

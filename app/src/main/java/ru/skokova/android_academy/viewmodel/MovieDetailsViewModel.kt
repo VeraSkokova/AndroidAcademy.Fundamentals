@@ -8,8 +8,8 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.launch
 import ru.skokova.android_academy.business.MovieDetailsInteractor
-import ru.skokova.android_academy.data.Movie
 import ru.skokova.android_academy.data.Resource
+import ru.skokova.android_academy.data.model.Movie
 
 class MovieDetailsViewModel(private val movieDetailsInteractor: MovieDetailsInteractor) :
     ViewModel() {
@@ -24,9 +24,7 @@ class MovieDetailsViewModel(private val movieDetailsInteractor: MovieDetailsInte
     fun getMovieDetails(id: Int) {
         viewModelScope.launch(exceptionHandler) {
             val movie = movieDetailsInteractor.getMovieById(id)
-            mutableMovieDetailsLiveData.value = movie?.let {
-                Resource.Success(movie)
-            } ?: Resource.Error(NULL_MESSAGE)
+            mutableMovieDetailsLiveData.value = Resource.Success(movie)
         }
     }
 

@@ -120,23 +120,8 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/iv_movie"
-            tools:text="@string/list_avengers" />
-
-        <TextView
-            android:id="@+id/tv_duration"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:background="@color/movies_background"
-            android:paddingStart="8dp"
-            android:paddingEnd="8dp"
-            android:paddingBottom="8dp"
-            android:textColor="@color/color_duration"
-            android:textSize="8sp"
-            android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tv_movie_name"
-            tools:text="@string/avengers_duration" />
+            android:layout_marginBottom="8dp"
+            tools:text="@string/list_avengers" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </com.google.android.material.card.MaterialCardView>

@@ -15,18 +15,24 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import ru.skokova.android_academy.R
-import ru.skokova.android_academy.data.Movie
 import ru.skokova.android_academy.data.Resource
+import ru.skokova.android_academy.data.model.Movie
 import ru.skokova.android_academy.ui.actor.ActorListDecoration
 import ru.skokova.android_academy.ui.actor.AdapterActors
+import ru.skokova.android_academy.viewmodel.ActorsViewModel
 import ru.skokova.android_academy.viewmodel.MovieDetailsViewModel
 import ru.skokova.android_academy.viewmodel.MovieViewModelFactory
+import ru.skokova.android_academy.viewmodel.TmdbConfigurationViewModel
 
 class FragmentMoviesDetails : Fragment() {
-    private val viewModel: MovieDetailsViewModel by viewModels { MovieViewModelFactory() }
+    private val movieDetailsViewModel: MovieDetailsViewModel by viewModels { MovieViewModelFactory() }
+    private val actorsViewModel: ActorsViewModel by viewModels { MovieViewModelFactory() }
+    private val configurationViewModel: TmdbConfigurationViewModel by viewModels { MovieViewModelFactory() }
 
     private val actorsAdapter = AdapterActors()
+
     private var navigationListener: MovieDetailsNavigationListener? = null
+    private var configurationListener: ConfigurationListener? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -53,13 +59,14 @@ class FragmentMoviesDetails : Fragment() {
 
         val movieId = arguments?.getInt(MOVIE_ID)
         movieId?.let {
-            viewModel.getMovieDetails(movieId)
+            movieDetailsViewModel.getMovieDetails(movieId)
+            actorsViewModel.getMovieActors(movieId)
         } ?: run {
             Toast.makeText(context, R.string.load_error, Toast.LENGTH_SHORT).show()
             navigationListener?.onBackPressed()
         }
 
-        viewModel.movieDetailsLiveData.observe(viewLifecycleOwner, { resource ->
+        movieDetailsViewModel.movieDetailsLiveData.observe(viewLifecycleOwner, { resource ->
             when (resource) {
                 is Resource.Success -> updateMovieInformation(view, resource.data)
                 is Resource.Error -> {
@@ -69,7 +76,55 @@ class FragmentMoviesDetails : Fragment() {
                 }
             }
         })
+
+        actorsViewModel.actorsLiveData.observe(viewLifecycleOwner, { resource ->
+            when (resource) {
+                is Resource.Success -> {
+                    val profileImageUrl = configurationListener?.getProfileImageUrl()
+                    profileImageUrl?.let {
+                        actorsAdapter.updateActors(resource.data, profileImageUrl)
+                    } ?: run {
+                        Toast.makeText(context, R.string.actors_error, Toast.LENGTH_SHORT).show()
+                        view.findViewById<View>(R.id.tv_cast_title).visibility = View.GONE
+                    }
+                }
+                is Resource.Error -> {
+                    Toast.makeText(context, R.string.actors_error, Toast.LENGTH_SHORT).show()
+                    view.findViewById<View>(R.id.tv_cast_title).visibility = View.GONE
+                }
+            }
+        })
     }
+
+    private fun loadMovieInformation(movie: Movie, view: View) {
+        val backdropImageUrl = configurationListener?.getBackdropImageUrl()
+        backdropImageUrl?.apply {
+            updatePoster(movie, view, backdropImageUrl)
+        } ?: run {
+            configurationViewModel.configurationLiveData.observe(
+                viewLifecycleOwner,
+                { resource ->
+                    when (resource) {
+                        is Resource.Success -> {
+                            configurationListener?.setBaseImageUrls(
+                                resource.data.baseBackdropImageUrl,
+                                resource.data.basePosterImageUrl,
+                                resource.data.baseProfileImageUrl
+                            )
+                            updatePoster(movie, view, resource.data.baseBackdropImageUrl)
+                        }
+                        is Resource.Error -> Toast.makeText(
+                            context,
+                            resource.message,
+                            Toast.LENGTH_SHORT
+                        )
+                            .show()
+                    }
+                }
+            )
+        }
+    }
+
 
     private fun updateMovieInformation(
         view: View,
@@ -87,30 +142,42 @@ class FragmentMoviesDetails : Fragment() {
                 movie.numberOfRatings
             )
         view.findViewById<TextView>(R.id.tv_description).text = movie.overview
+        loadMovieInformation(movie, view)
+    }
+
+    private fun updatePoster(
+        movie: Movie,
+        view: View,
+        baseUrl: String
+    ) {
         Glide.with(this)
-            .load(movie.backdrop)
+            .load(baseUrl + movie.backdrop)
             .apply(imageOption)
             .into(view.findViewById(R.id.iv_poster))
-
-        if (movie.actors.isNotEmpty()) {
-            actorsAdapter.updateActors(movie.actors)
-        } else {
-            view.findViewById<View>(R.id.tv_cast_title).visibility = View.GONE
-        }
     }
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
         navigationListener = activity as MovieDetailsNavigationListener
+        configurationListener = activity as ConfigurationListener
     }
 
     override fun onDetach() {
         navigationListener = null
+        configurationListener = null
         super.onDetach()
     }
 
     interface MovieDetailsNavigationListener {
         fun onBackPressed()
+    }
+
+    interface ConfigurationListener {
+        fun getBackdropImageUrl(): String?
+
+        fun getProfileImageUrl(): String?
+
+        fun setBaseImageUrls(backdropUrl: String, posterUrl: String, profileUrl: String)
     }
 
     companion object {

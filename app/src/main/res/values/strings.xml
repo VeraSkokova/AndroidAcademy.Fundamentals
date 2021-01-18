@@ -26,5 +26,9 @@
     <string name="pg">%d+</string>
     <!--Movies-->
 
+    <!--Actors-->
+    <string name="actors_error">No actors found for this movie</string>
+    <!--Actors-->
+
     <string name="load_error">Something went wrong, please try again later</string>
 </resources>

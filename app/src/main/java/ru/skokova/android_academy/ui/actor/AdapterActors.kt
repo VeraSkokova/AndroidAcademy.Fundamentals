@@ -9,11 +9,12 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import ru.skokova.android_academy.R
-import ru.skokova.android_academy.data.Actor
+import ru.skokova.android_academy.data.model.Actor
 
 class AdapterActors : RecyclerView.Adapter<ActorViewHolder>() {
-    private var actors: List<Actor> =
-        listOf()
+
+    private var actors: List<Actor> = listOf()
+    private lateinit var baseUrl: String
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ActorViewHolder {
         return ActorViewHolder(
@@ -22,13 +23,14 @@ class AdapterActors : RecyclerView.Adapter<ActorViewHolder>() {
     }
 
     override fun onBindViewHolder(holder: ActorViewHolder, position: Int) {
-        holder.bind(actors.getOrNull(position))
+        holder.bind(actors.getOrNull(position), baseUrl)
     }
 
     override fun getItemCount() = actors.size
 
-    fun updateActors(actors: List<Actor>) {
+    fun updateActors(actors: List<Actor>, baseUrl: String) {
         this.actors = actors
+        this.baseUrl = baseUrl
         notifyDataSetChanged()
     }
 }
@@ -37,12 +39,12 @@ class ActorViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
     private val photo = itemView.findViewById<ImageView>(R.id.img_actor)
     private val name = itemView.findViewById<TextView>(R.id.tv_actor)
 
-    fun bind(actor: Actor?) {
+    fun bind(actor: Actor?, baseUrl: String) {
         actor?.let { it ->
             name.text = it.name
             photo.visibility = View.VISIBLE
             Glide.with(itemView.context)
-                .load(actor.picture)
+                .load(baseUrl + actor.picture)
                 .apply(imageOption)
                 .into(photo)
         }
