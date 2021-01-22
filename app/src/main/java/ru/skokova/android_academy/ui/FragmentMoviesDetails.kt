@@ -52,9 +52,9 @@ class FragmentMoviesDetails : Fragment() {
         }
 
         val movieId = arguments?.getInt(MOVIE_ID)
-        movieId?.let {
-            viewModel.getMovieDetails(movieId)
-        } ?: run {
+        movieId?.let(
+            viewModel::getMovieDetails
+        ) ?: run {
             Toast.makeText(context, R.string.load_error, Toast.LENGTH_SHORT).show()
             navigationListener?.onBackPressed()
         }
