@@ -7,15 +7,14 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.launch
-import ru.skokova.android_academy.business.ConfigurationInteractor
+import ru.skokova.android_academy.business.ImageLoadingInfoInteractor
 import ru.skokova.android_academy.data.Resource
-import ru.skokova.android_academy.data.TmdbConfiguration
 
-class TmdbConfigurationViewModel(private val configurationInteractor: ConfigurationInteractor) :
+class ImageLoadingInfoViewModel(private val imageApiDetailsInteractorInteractor: ImageLoadingInfoInteractor) :
     ViewModel() {
-    private val mutableConfigurationLiveData: MutableLiveData<Resource<TmdbConfiguration>> =
+    private val mutableConfigurationLiveData: MutableLiveData<Resource<ru.skokova.android_academy.data.model.ImageLoadingInfo>> =
         MutableLiveData()
-    val configurationLiveData: LiveData<Resource<TmdbConfiguration>> get() = mutableConfigurationLiveData
+    val configurationLiveData: LiveData<Resource<ru.skokova.android_academy.data.model.ImageLoadingInfo>> get() = mutableConfigurationLiveData
 
     private val exceptionHandler = CoroutineExceptionHandler { coroutineContext, exception ->
         mutableConfigurationLiveData.value =
@@ -25,7 +24,7 @@ class TmdbConfigurationViewModel(private val configurationInteractor: Configurat
 
     init {
         viewModelScope.launch(exceptionHandler) {
-            val configuration = configurationInteractor.getConfiguration()
+            val configuration = imageApiDetailsInteractorInteractor.getImageLoadingInfo()
             mutableConfigurationLiveData.value = Resource.Success(configuration)
         }
     }

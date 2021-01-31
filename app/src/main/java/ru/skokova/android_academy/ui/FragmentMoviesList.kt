@@ -18,18 +18,17 @@ import ru.skokova.android_academy.data.Resource
 import ru.skokova.android_academy.data.model.Movie
 import ru.skokova.android_academy.ui.movie.AdapterMovies
 import ru.skokova.android_academy.ui.movie.MoviesListDecoration
+import ru.skokova.android_academy.viewmodel.ImageLoadingInfoViewModel
 import ru.skokova.android_academy.viewmodel.MovieListViewModel
 import ru.skokova.android_academy.viewmodel.MovieViewModelFactory
-import ru.skokova.android_academy.viewmodel.TmdbConfigurationViewModel
-
 
 class FragmentMoviesList : Fragment() {
 
-    private val moviesViewModel: MovieListViewModel by viewModels { MovieViewModelFactory() }
-    private val configurationViewModel: TmdbConfigurationViewModel by viewModels { MovieViewModelFactory() }
+    private val movieViewModelFactory = MovieViewModelFactory()
+    private val moviesViewModel: MovieListViewModel by viewModels { movieViewModelFactory }
+    private val imageLoadingInfoViewModel: ImageLoadingInfoViewModel by viewModels { movieViewModelFactory }
 
     private var clickListener: MovieClickListener? = null
-    private var configurationListener: ConfigurationListener? = null
 
     private var moviesAdapter: AdapterMovies? = null
 
@@ -63,36 +62,28 @@ class FragmentMoviesList : Fragment() {
             addOnScrollListener(recyclerViewPreloader)
         }
 
-        configurationListener?.getPosterImageUrl()?.apply {
-            getMovies()
-        } ?: run {
-            configurationViewModel.configurationLiveData.observe(
-                viewLifecycleOwner,
-                { resource ->
-                    when (resource) {
-                        is Resource.Success -> {
-                            configurationListener?.setBaseImageUrls(
-                                resource.data.baseBackdropImageUrl,
-                                resource.data.basePosterImageUrl,
-                                resource.data.baseProfileImageUrl
-                            )
-                            getMovies()
+        imageLoadingInfoViewModel.configurationLiveData.observe(
+            viewLifecycleOwner,
+            { resource ->
+                when (resource) {
+                    is Resource.Success -> {
+                        val baseUrl = resource.data.basePosterImageUrl
+                        baseUrl?.let {
+                            getMovies(it)
                         }
-                        is Resource.Error -> Toast.makeText(
-                            context,
-                            resource.message,
-                            Toast.LENGTH_SHORT
-                        )
-                            .show()
                     }
+                    is Resource.Error -> Toast.makeText(
+                        context,
+                        resource.message,
+                        Toast.LENGTH_SHORT
+                    )
+                        .show()
                 }
-            )
-        }
+            }
+        )
     }
 
-    private fun getMovies() {
-        val baseUrl = configurationListener?.getPosterImageUrl() ?: return
-
+    private fun getMovies(baseUrl: String) {
         moviesViewModel.moviesLiveData.observe(
             viewLifecycleOwner,
             { resource ->
@@ -113,23 +104,15 @@ class FragmentMoviesList : Fragment() {
     override fun onAttach(context: Context) {
         super.onAttach(context)
         clickListener = activity as MovieClickListener
-        configurationListener = activity as ConfigurationListener
     }
 
     override fun onDetach() {
         clickListener = null
-        configurationListener = null
         super.onDetach()
     }
 
     interface MovieClickListener {
         fun onClick(id: Int)
-    }
-
-    interface ConfigurationListener {
-        fun getPosterImageUrl(): String?
-
-        fun setBaseImageUrls(backdropUrl: String, posterUrl: String, profileUrl: String)
     }
 
     companion object {

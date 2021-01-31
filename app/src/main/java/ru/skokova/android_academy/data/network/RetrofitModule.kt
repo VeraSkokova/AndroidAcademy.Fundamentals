@@ -14,15 +14,13 @@ object RetrofitModule {
         .addInterceptor(TmdbApiKeyInterceptor())
         .build()
 
-    private val json = Json {
-        ignoreUnknownKeys = true
-    }
-
     @Suppress("EXPERIMENTAL_API_USAGE")
     private val retrofit: Retrofit = Retrofit.Builder()
         .client(client)
         .baseUrl(BuildConfig.BASE_URL)
-        .addConverterFactory(json.asConverterFactory("application/json".toMediaType()))
+        .addConverterFactory(Json { ignoreUnknownKeys = true }.run {
+            asConverterFactory("application/json".toMediaType())
+        })
         .build()
 
     val moviesApi: MoviesApi = retrofit.create(MoviesApi::class.java)

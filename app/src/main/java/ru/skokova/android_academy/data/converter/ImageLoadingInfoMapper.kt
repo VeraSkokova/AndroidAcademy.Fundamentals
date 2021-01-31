@@ -1,10 +1,10 @@
 package ru.skokova.android_academy.data.converter
 
-import ru.skokova.android_academy.data.TmdbConfiguration
+import ru.skokova.android_academy.data.model.ImageLoadingInfo
 import ru.skokova.android_academy.data.network.ConfigurationResponse
 
-class ConfigurationMapper {
-    fun toConfiguration(configurationResponse: ConfigurationResponse): TmdbConfiguration {
+class ImageLoadingInfoMapper {
+    fun toConfiguration(configurationResponse: ConfigurationResponse): ImageLoadingInfo {
         val baseImageUrl = configurationResponse.images.secureBaseUrl
 
         val backdropBaseUrl =
@@ -13,10 +13,10 @@ class ConfigurationMapper {
             addSizeToBaseUrl(baseImageUrl, configurationResponse.images.posterSizes)
         val profileBaseUrl =
             addSizeToBaseUrl(baseImageUrl, configurationResponse.images.profileSizes)
-        return TmdbConfiguration(backdropBaseUrl, posterBaseUrl, profileBaseUrl)
+        return ImageLoadingInfo(backdropBaseUrl, posterBaseUrl, profileBaseUrl)
     }
 
     private fun addSizeToBaseUrl(baseUrl: String, sizes: List<String>): String {
-        return baseUrl + sizes[sizes.size - 1]
+        return baseUrl + sizes.last()
     }
 }
