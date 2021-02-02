@@ -1,7 +1,8 @@
-package ru.skokova.android_academy
+package ru.skokova.android_academy.ui
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import ru.skokova.android_academy.R
 
 class MainActivity : AppCompatActivity(), FragmentMoviesList.MovieClickListener,
     FragmentMoviesDetails.MovieDetailsNavigationListener {

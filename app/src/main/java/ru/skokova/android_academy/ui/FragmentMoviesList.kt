@@ -1,35 +1,33 @@
-package ru.skokova.android_academy
+package ru.skokova.android_academy.ui
 
 import android.content.Context
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.integration.recyclerview.RecyclerViewPreloader
 import com.bumptech.glide.util.ViewPreloadSizeProvider
-import kotlinx.coroutines.*
+import ru.skokova.android_academy.R
 import ru.skokova.android_academy.data.Movie
-import ru.skokova.android_academy.data.loadMovies
-import ru.skokova.android_academy.movie.AdapterMovies
-import ru.skokova.android_academy.movie.MoviesListDecoration
+import ru.skokova.android_academy.data.Resource
+import ru.skokova.android_academy.ui.movie.AdapterMovies
+import ru.skokova.android_academy.ui.movie.MoviesListDecoration
+import ru.skokova.android_academy.viewmodel.MovieListViewModel
+import ru.skokova.android_academy.viewmodel.MovieViewModelFactory
 
 
 class FragmentMoviesList : Fragment() {
+
+    private val viewModel: MovieListViewModel by viewModels { MovieViewModelFactory() }
+
     private var clickListener: MovieClickListener? = null
     private var moviesAdapter: AdapterMovies? = null
-
-    private val exceptionHandler = CoroutineExceptionHandler { coroutineContext, exception ->
-        Toast.makeText(context, R.string.load_error, Toast.LENGTH_SHORT).show()
-        Log.w(ERROR_TAG, "CoroutineExceptionHandler got $exception in $coroutineContext")
-    }
-
-    private var scope = CoroutineScope(SupervisorJob() + Dispatchers.Main + exceptionHandler)
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -39,6 +37,7 @@ class FragmentMoviesList : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
         moviesAdapter = AdapterMovies(clickListener, Glide.with(this))
         moviesAdapter?.setHasStableIds(true)
         val preloadSizeProvider = ViewPreloadSizeProvider<Movie>()
@@ -59,6 +58,20 @@ class FragmentMoviesList : Fragment() {
             )
             addOnScrollListener(recyclerViewPreloader)
         }
+
+        viewModel.moviesLiveData.observe(
+            viewLifecycleOwner,
+            { resource ->
+                when (resource) {
+                    is Resource.Success -> moviesAdapter?.updateMovies(resource.data)
+                    is Resource.Error -> Toast.makeText(
+                        context,
+                        resource.message,
+                        Toast.LENGTH_SHORT
+                    )
+                        .show()
+                }
+            })
     }
 
     override fun onAttach(context: Context) {
@@ -71,26 +84,12 @@ class FragmentMoviesList : Fragment() {
         super.onDetach()
     }
 
-    override fun onDestroyView() {
-        scope.cancel()
-        super.onDestroyView()
-    }
-
-    override fun onStart() {
-        super.onStart()
-        scope.launch {
-            val loadMovies = loadMovies(requireContext())
-            moviesAdapter?.updateMovies(loadMovies)
-        }
-    }
-
     interface MovieClickListener {
         fun onClick(id: Int)
     }
 
     companion object {
         private const val COLUMNS_COUNT = 2
-        private const val ERROR_TAG = "COROUTINE_ERROR"
         private const val PRELOAD_COUNT = 7
     }
 }

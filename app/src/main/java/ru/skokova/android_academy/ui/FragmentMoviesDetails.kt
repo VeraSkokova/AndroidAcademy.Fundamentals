@@ -1,8 +1,7 @@
-package ru.skokova.android_academy
+package ru.skokova.android_academy.ui
 
 import android.content.Context
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,26 +9,24 @@ import android.widget.RatingBar
 import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
-import kotlinx.coroutines.*
-import ru.skokova.android_academy.actor.ActorListDecoration
-import ru.skokova.android_academy.actor.AdapterActors
+import ru.skokova.android_academy.R
 import ru.skokova.android_academy.data.Movie
-import ru.skokova.android_academy.data.loadMovie
+import ru.skokova.android_academy.data.Resource
+import ru.skokova.android_academy.ui.actor.ActorListDecoration
+import ru.skokova.android_academy.ui.actor.AdapterActors
+import ru.skokova.android_academy.viewmodel.MovieDetailsViewModel
+import ru.skokova.android_academy.viewmodel.MovieViewModelFactory
 
 class FragmentMoviesDetails : Fragment() {
+    private val viewModel: MovieDetailsViewModel by viewModels { MovieViewModelFactory() }
+
     private val actorsAdapter = AdapterActors()
     private var navigationListener: MovieDetailsNavigationListener? = null
-
-    private val exceptionHandler = CoroutineExceptionHandler { coroutineContext, exception ->
-        Toast.makeText(context, R.string.load_error, Toast.LENGTH_SHORT).show()
-        Log.e(ERROR_TAG, "CoroutineExceptionHandler got $exception in $coroutineContext")
-    }
-
-    private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Main + exceptionHandler)
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -55,16 +52,23 @@ class FragmentMoviesDetails : Fragment() {
         }
 
         val movieId = arguments?.getInt(MOVIE_ID)
-        if (movieId == null) {
+        movieId?.let(
+            viewModel::getMovieDetails
+        ) ?: run {
             Toast.makeText(context, R.string.load_error, Toast.LENGTH_SHORT).show()
             navigationListener?.onBackPressed()
-        } else {
-            scope.launch {
-                loadMovie(movieId, requireContext())?.let { movie ->
-                    updateMovieInformation(view, movie)
+        }
+
+        viewModel.movieDetailsLiveData.observe(viewLifecycleOwner, { resource ->
+            when (resource) {
+                is Resource.Success -> updateMovieInformation(view, resource.data)
+                is Resource.Error -> {
+                    Toast.makeText(context, resource.message, Toast.LENGTH_SHORT)
+                        .show()
+                    navigationListener?.onBackPressed()
                 }
             }
-        }
+        })
     }
 
     private fun updateMovieInformation(
@@ -105,18 +109,12 @@ class FragmentMoviesDetails : Fragment() {
         super.onDetach()
     }
 
-    override fun onDestroyView() {
-        scope.cancel()
-        super.onDestroyView()
-    }
-
     interface MovieDetailsNavigationListener {
         fun onBackPressed()
     }
 
     companion object {
         private const val MOVIE_ID = "movie_id"
-        private const val ERROR_TAG = "COROUTINE_ERROR"
 
         private val imageOption = RequestOptions()
             .placeholder(R.drawable.ic_baseline_movie)
