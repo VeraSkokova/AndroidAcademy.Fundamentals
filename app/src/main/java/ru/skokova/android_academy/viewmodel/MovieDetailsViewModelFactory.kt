@@ -4,10 +4,14 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import ru.skokova.android_academy.business.ActorsInteractor
 import ru.skokova.android_academy.business.MovieDetailsInteractor
+import ru.skokova.android_academy.data.DbActorsRepository
+import ru.skokova.android_academy.data.DbMovieDetailsRepository
 import ru.skokova.android_academy.data.NetworkActorsRepository
 import ru.skokova.android_academy.data.NetworkMovieDetailsRepository
-import ru.skokova.android_academy.data.converter.ActorsMapper
-import ru.skokova.android_academy.data.converter.MovieMapper
+import ru.skokova.android_academy.data.mapper.EntityActorsMapper
+import ru.skokova.android_academy.data.mapper.EntityMovieMapper
+import ru.skokova.android_academy.data.mapper.JsonActorsMapper
+import ru.skokova.android_academy.data.mapper.JsonMovieMapper
 
 class MovieDetailsViewModelFactory(private val movieId: Int) : ViewModelProvider.Factory {
     @Suppress("UNCHECKED_CAST")
@@ -15,10 +19,12 @@ class MovieDetailsViewModelFactory(private val movieId: Int) : ViewModelProvider
         MovieDetailsViewModel::class.java -> MovieDetailsViewModel(
             movieId,
             MovieDetailsInteractor(
-                NetworkMovieDetailsRepository(MovieMapper())
+                NetworkMovieDetailsRepository(JsonMovieMapper()),
+                DbMovieDetailsRepository(EntityMovieMapper())
             ),
             ActorsInteractor(
-                NetworkActorsRepository(ActorsMapper())
+                NetworkActorsRepository(JsonActorsMapper()),
+                DbActorsRepository(EntityActorsMapper())
             )
         )
         else -> throw IllegalArgumentException("$modelClass is not registered ViewModel")

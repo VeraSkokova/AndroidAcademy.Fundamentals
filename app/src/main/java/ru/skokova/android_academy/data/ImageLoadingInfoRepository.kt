@@ -2,7 +2,7 @@ package ru.skokova.android_academy.data
 
 import android.content.Context
 import ru.skokova.android_academy.MoviesApplication
-import ru.skokova.android_academy.data.converter.ImageLoadingInfoMapper
+import ru.skokova.android_academy.data.mapper.JsonImageLoadingInfoMapper
 import ru.skokova.android_academy.data.model.ImageLoadingInfo
 import ru.skokova.android_academy.data.network.RetrofitModule
 
@@ -10,7 +10,7 @@ interface ImageLoadingInfoRepository {
     suspend fun getImageLoadingInfo(): ImageLoadingInfo?
 }
 
-class NetworkImageLoadingInfoRepository(private val mapper: ImageLoadingInfoMapper) :
+class NetworkImageLoadingInfoRepository(private val mapper: JsonImageLoadingInfoMapper) :
     ImageLoadingInfoRepository {
 
     override suspend fun getImageLoadingInfo(): ImageLoadingInfo {

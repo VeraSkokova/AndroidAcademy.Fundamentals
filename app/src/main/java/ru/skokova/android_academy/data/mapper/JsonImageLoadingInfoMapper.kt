@@ -1,9 +1,9 @@
-package ru.skokova.android_academy.data.converter
+package ru.skokova.android_academy.data.mapper
 
 import ru.skokova.android_academy.data.model.ImageLoadingInfo
 import ru.skokova.android_academy.data.network.ConfigurationResponse
 
-class ImageLoadingInfoMapper {
+class JsonImageLoadingInfoMapper {
     fun toConfiguration(configurationResponse: ConfigurationResponse): ImageLoadingInfo {
         val baseImageUrl = configurationResponse.images.secureBaseUrl
 

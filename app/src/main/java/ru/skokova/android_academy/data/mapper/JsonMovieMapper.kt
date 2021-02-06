@@ -1,11 +1,11 @@
-package ru.skokova.android_academy.data.converter
+package ru.skokova.android_academy.data.mapper
 
 import ru.skokova.android_academy.data.model.Genre
 import ru.skokova.android_academy.data.model.Movie
 import ru.skokova.android_academy.data.network.MovieDetailsResponse
 import ru.skokova.android_academy.data.network.MovieListItemResponse
 
-class MovieMapper {
+class JsonMovieMapper {
     fun toMovie(
         jsonMovie: MovieListItemResponse,
         genresMap: Map<Int, Genre>

@@ -18,14 +18,19 @@ class MovieListViewModel(
     val moviesLiveData: LiveData<Resource<List<Movie>>> get() = mutableMoviesLiveData
 
     private val exceptionHandler = CoroutineExceptionHandler { coroutineContext, exception ->
-        mutableMoviesLiveData.value = Resource.Error(exception.message ?: DEFAULT_ERROR)
+        if (!ViewModelUtils.isNetworkException(exception)) {
+            mutableMoviesLiveData.value = Resource.Error(exception.message ?: DEFAULT_ERROR)
+        }
         Log.e(ERROR_TAG, "CoroutineExceptionHandler got $exception in $coroutineContext")
     }
 
     init {
         viewModelScope.launch(exceptionHandler) {
-            val movies = movieListInteractor.getMovies()
-            mutableMoviesLiveData.value = Resource.Success(movies)
+            val cachedMovies = movieListInteractor.getCachedMovies()
+            mutableMoviesLiveData.value = Resource.Success(cachedMovies)
+
+            val loadedMovies = movieListInteractor.getMovies()
+            mutableMoviesLiveData.value = Resource.Success(loadedMovies)
         }
     }
 

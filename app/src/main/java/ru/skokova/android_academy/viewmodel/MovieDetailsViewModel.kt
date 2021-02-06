@@ -22,7 +22,9 @@ class MovieDetailsViewModel(
     val movieDetailsLiveData: LiveData<Resource<MovieDetails>> get() = mutableMovieDetailsLiveData
 
     private val exceptionHandler = CoroutineExceptionHandler { coroutineContext, exception ->
-        mutableMovieDetailsLiveData.value = Resource.Error(exception.message ?: DEFAULT_ERROR)
+        if (!ViewModelUtils.isNetworkException(exception)) {
+            mutableMovieDetailsLiveData.value = Resource.Error(exception.message ?: DEFAULT_ERROR)
+        }
         Log.e(ERROR_TAG, "CoroutineExceptionHandler got $exception in $coroutineContext")
     }
 
@@ -30,17 +32,22 @@ class MovieDetailsViewModel(
         getMovieDetails(movieId)
     }
 
-    fun getMovieDetails(id: Int) {
+    private fun getMovieDetails(id: Int) {
         viewModelScope.launch(exceptionHandler) {
-            val movie = movieDetailsInteractor.getMovieById(id)
-            val actors = actorsInteractor.getMovieActors(id)
-            mutableMovieDetailsLiveData.value = Resource.Success(MovieDetails(movie, actors))
+            val cachedMovie = movieDetailsInteractor.getCachedMovie(id)
+            val cachedActors = actorsInteractor.getCachedMovieActors(id)
+            mutableMovieDetailsLiveData.value =
+                Resource.Success(MovieDetails(cachedMovie, cachedActors))
+
+            val loadedMovie = movieDetailsInteractor.getMovieById(id)
+            val loadedActors = actorsInteractor.getMovieActors(id)
+            mutableMovieDetailsLiveData.value =
+                Resource.Success(MovieDetails(loadedMovie, loadedActors))
         }
     }
 
     companion object {
         private const val ERROR_TAG = "COROUTINE_ERROR"
         private const val DEFAULT_ERROR = "An error occurred while loading movie details"
-        private const val NULL_MESSAGE = "There is no movie with this id"
     }
 }
