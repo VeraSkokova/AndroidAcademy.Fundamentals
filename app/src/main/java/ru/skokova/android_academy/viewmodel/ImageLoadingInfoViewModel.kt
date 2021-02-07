@@ -24,6 +24,7 @@ class ImageLoadingInfoViewModel(private val imageApiDetailsInteractorInteractor:
 
     init {
         viewModelScope.launch(exceptionHandler) {
+            mutableConfigurationLiveData.value = Resource.Loading()
             val configuration = imageApiDetailsInteractorInteractor.getImageLoadingInfo()
             mutableConfigurationLiveData.value = Resource.Success(configuration)
         }

@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ProgressBar
 import android.widget.RatingBar
 import android.widget.TextView
 import android.widget.Toast
@@ -35,6 +36,8 @@ class FragmentMoviesDetails : Fragment() {
 
     private var navigationListener: MovieDetailsNavigationListener? = null
 
+    private lateinit var progress: ProgressBar
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -44,6 +47,7 @@ class FragmentMoviesDetails : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        progress = view.findViewById(R.id.progress)
         view.findViewById<View>(R.id.tv_back)
             .setOnClickListener { navigationListener?.onBackPressed() }
         view.findViewById<View>(R.id.img_back)
@@ -71,12 +75,17 @@ class FragmentMoviesDetails : Fragment() {
 
         movieDetailsViewModel.movieDetailsLiveData.observe(viewLifecycleOwner, { resource ->
             when (resource) {
-                is Resource.Success -> updateMovieInformation(view, resource.data)
+                is Resource.Success -> {
+                    progress.visibility = View.GONE
+                    updateMovieInformation(view, resource.data)
+                }
                 is Resource.Error -> {
+                    progress.visibility = View.GONE
                     Toast.makeText(context, resource.message, Toast.LENGTH_SHORT)
                         .show()
                     navigationListener?.onBackPressed()
                 }
+                is Resource.Loading -> progress.visibility = View.VISIBLE
             }
         })
     }
@@ -87,16 +96,21 @@ class FragmentMoviesDetails : Fragment() {
             { resource ->
                 when (resource) {
                     is Resource.Success -> {
+                        progress.visibility = View.GONE
                         val backdropUrl = resource.data.baseBackdropImageUrl
                         val profileUrl = resource.data.baseProfileImageUrl
                         updatePosters(movie, actors, view, backdropUrl, profileUrl)
                     }
-                    is Resource.Error -> Toast.makeText(
-                        context,
-                        resource.message,
-                        Toast.LENGTH_SHORT
-                    )
-                        .show()
+                    is Resource.Error -> {
+                        progress.visibility = View.GONE
+                        Toast.makeText(
+                            context,
+                            resource.message,
+                            Toast.LENGTH_SHORT
+                        )
+                            .show()
+                    }
+                    is Resource.Loading -> progress.visibility = View.VISIBLE
                 }
             }
         )

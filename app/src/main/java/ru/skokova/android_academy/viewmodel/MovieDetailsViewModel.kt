@@ -34,6 +34,8 @@ class MovieDetailsViewModel(
 
     private fun getMovieDetails(id: Int) {
         viewModelScope.launch(exceptionHandler) {
+            mutableMovieDetailsLiveData.value = Resource.Loading()
+
             val cachedMovie = movieDetailsInteractor.getCachedMovie(id)
             val cachedActors = actorsInteractor.getCachedMovieActors(id)
             mutableMovieDetailsLiveData.value =
