@@ -9,13 +9,16 @@ interface GenresCachingRepository : GenresRepository {
 }
 
 class DbGenresRepository(private val mapper: EntityGenreMapper) : GenresCachingRepository {
+    private val moviesDatabase = MoviesDatabase.instance
+
     override suspend fun loadGenres(): List<Genre> {
-        val savedGenres = MoviesDatabase.instance.genresDao.getAllGenres()
+        val savedGenres = moviesDatabase.genresDao.getAllGenres()
         return savedGenres.map { mapper.toGenre(it) }
     }
 
     override suspend fun saveGenres(genres: List<Genre>) {
         val entities = genres.map { mapper.toEntity(it) }
-        MoviesDatabase.instance.genresDao.insertGenres(entities)
+        moviesDatabase.genresDao.deleteGenres()
+        moviesDatabase.genresDao.insertGenres(entities)
     }
 }

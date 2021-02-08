@@ -21,7 +21,6 @@ class MovieListInteractor(
         }
 
         val movies = movieListRepository.loadMovies()
-        movieListCacheRepository.deleteOldMovies()
         movieListCacheRepository.saveMovies(movies)
         movies
     }
