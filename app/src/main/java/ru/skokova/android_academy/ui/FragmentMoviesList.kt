@@ -14,19 +14,22 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.integration.recyclerview.RecyclerViewPreloader
 import com.bumptech.glide.util.ViewPreloadSizeProvider
 import ru.skokova.android_academy.R
-import ru.skokova.android_academy.data.Movie
 import ru.skokova.android_academy.data.Resource
+import ru.skokova.android_academy.data.model.Movie
 import ru.skokova.android_academy.ui.movie.AdapterMovies
 import ru.skokova.android_academy.ui.movie.MoviesListDecoration
+import ru.skokova.android_academy.viewmodel.ImageLoadingInfoViewModel
 import ru.skokova.android_academy.viewmodel.MovieListViewModel
 import ru.skokova.android_academy.viewmodel.MovieViewModelFactory
 
-
 class FragmentMoviesList : Fragment() {
 
-    private val viewModel: MovieListViewModel by viewModels { MovieViewModelFactory() }
+    private val movieViewModelFactory = MovieViewModelFactory()
+    private val moviesViewModel: MovieListViewModel by viewModels { movieViewModelFactory }
+    private val imageLoadingInfoViewModel: ImageLoadingInfoViewModel by viewModels { movieViewModelFactory }
 
     private var clickListener: MovieClickListener? = null
+
     private var moviesAdapter: AdapterMovies? = null
 
     override fun onCreateView(
@@ -59,11 +62,35 @@ class FragmentMoviesList : Fragment() {
             addOnScrollListener(recyclerViewPreloader)
         }
 
-        viewModel.moviesLiveData.observe(
+        imageLoadingInfoViewModel.configurationLiveData.observe(
             viewLifecycleOwner,
             { resource ->
                 when (resource) {
-                    is Resource.Success -> moviesAdapter?.updateMovies(resource.data)
+                    is Resource.Success -> {
+                        val baseUrl = resource.data.basePosterImageUrl
+                        baseUrl?.let {
+                            getMovies(it)
+                        }
+                    }
+                    is Resource.Error -> Toast.makeText(
+                        context,
+                        resource.message,
+                        Toast.LENGTH_SHORT
+                    )
+                        .show()
+                }
+            }
+        )
+    }
+
+    private fun getMovies(baseUrl: String) {
+        moviesViewModel.moviesLiveData.observe(
+            viewLifecycleOwner,
+            { resource ->
+                when (resource) {
+                    is Resource.Success -> {
+                        moviesAdapter?.updateMovies(resource.data, baseUrl)
+                    }
                     is Resource.Error -> Toast.makeText(
                         context,
                         resource.message,

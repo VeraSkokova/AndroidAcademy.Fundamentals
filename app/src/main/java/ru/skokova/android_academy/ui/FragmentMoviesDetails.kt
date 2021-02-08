@@ -10,22 +10,29 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import ru.skokova.android_academy.R
-import ru.skokova.android_academy.data.Movie
 import ru.skokova.android_academy.data.Resource
+import ru.skokova.android_academy.data.model.Actor
+import ru.skokova.android_academy.data.model.Movie
+import ru.skokova.android_academy.data.model.MovieDetails
 import ru.skokova.android_academy.ui.actor.ActorListDecoration
 import ru.skokova.android_academy.ui.actor.AdapterActors
+import ru.skokova.android_academy.viewmodel.ImageLoadingInfoViewModel
 import ru.skokova.android_academy.viewmodel.MovieDetailsViewModel
+import ru.skokova.android_academy.viewmodel.MovieDetailsViewModelFactory
 import ru.skokova.android_academy.viewmodel.MovieViewModelFactory
 
 class FragmentMoviesDetails : Fragment() {
-    private val viewModel: MovieDetailsViewModel by viewModels { MovieViewModelFactory() }
+    private lateinit var movieDetailsViewModel: MovieDetailsViewModel
+    private val imageLoadingInfoViewModel: ImageLoadingInfoViewModel by viewModels { MovieViewModelFactory() }
 
     private val actorsAdapter = AdapterActors()
+
     private var navigationListener: MovieDetailsNavigationListener? = null
 
     override fun onCreateView(
@@ -52,14 +59,17 @@ class FragmentMoviesDetails : Fragment() {
         }
 
         val movieId = arguments?.getInt(MOVIE_ID)
-        movieId?.let(
-            viewModel::getMovieDetails
-        ) ?: run {
+        movieId?.let {
+            movieDetailsViewModel =
+                ViewModelProvider(this, MovieDetailsViewModelFactory(movieId)).get(
+                    MovieDetailsViewModel::class.java
+                )
+        } ?: run {
             Toast.makeText(context, R.string.load_error, Toast.LENGTH_SHORT).show()
             navigationListener?.onBackPressed()
         }
 
-        viewModel.movieDetailsLiveData.observe(viewLifecycleOwner, { resource ->
+        movieDetailsViewModel.movieDetailsLiveData.observe(viewLifecycleOwner, { resource ->
             when (resource) {
                 is Resource.Success -> updateMovieInformation(view, resource.data)
                 is Resource.Error -> {
@@ -71,10 +81,35 @@ class FragmentMoviesDetails : Fragment() {
         })
     }
 
+    private fun loadPosters(movie: Movie, actors: List<Actor>, view: View) {
+        imageLoadingInfoViewModel.configurationLiveData.observe(
+            viewLifecycleOwner,
+            { resource ->
+                when (resource) {
+                    is Resource.Success -> {
+                        val backdropUrl = resource.data.baseBackdropImageUrl
+                        val profileUrl = resource.data.baseProfileImageUrl
+                        updatePosters(movie, actors, view, backdropUrl, profileUrl)
+                    }
+                    is Resource.Error -> Toast.makeText(
+                        context,
+                        resource.message,
+                        Toast.LENGTH_SHORT
+                    )
+                        .show()
+                }
+            }
+        )
+    }
+
+
     private fun updateMovieInformation(
         view: View,
-        movie: Movie
+        movieDetails: MovieDetails
     ) {
+        val movie = movieDetails.movie
+        val actors = movieDetails.actors
+
         view.findViewById<TextView>(R.id.tv_movie_name).text = movie.title
         view.findViewById<TextView>(R.id.tv_pg).text =
             context?.resources?.getString(R.string.pg, movie.minimumAge)
@@ -87,14 +122,26 @@ class FragmentMoviesDetails : Fragment() {
                 movie.numberOfRatings
             )
         view.findViewById<TextView>(R.id.tv_description).text = movie.overview
-        Glide.with(this)
-            .load(movie.backdrop)
-            .apply(imageOption)
-            .into(view.findViewById(R.id.iv_poster))
+        loadPosters(movie, actors, view)
+    }
 
-        if (movie.actors.isNotEmpty()) {
-            actorsAdapter.updateActors(movie.actors)
-        } else {
+    private fun updatePosters(
+        movie: Movie,
+        actors: List<Actor>,
+        view: View,
+        backdropUrl: String?,
+        profileUrl: String?
+    ) {
+        backdropUrl?.let {
+            Glide.with(this)
+                .load(backdropUrl + movie.backdrop)
+                .apply(imageOption)
+                .into(view.findViewById(R.id.iv_poster))
+        }
+        profileUrl?.let {
+            actorsAdapter.updateActors(actors, profileUrl)
+        } ?: run {
+            Toast.makeText(context, R.string.actors_error, Toast.LENGTH_SHORT).show()
             view.findViewById<View>(R.id.tv_cast_title).visibility = View.GONE
         }
     }

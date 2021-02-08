@@ -6,6 +6,7 @@ import ru.skokova.android_academy.R
 
 class MainActivity : AppCompatActivity(), FragmentMoviesList.MovieClickListener,
     FragmentMoviesDetails.MovieDetailsNavigationListener {
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -22,5 +23,11 @@ class MainActivity : AppCompatActivity(), FragmentMoviesList.MovieClickListener,
             .add(R.id.container, FragmentMoviesDetails.newInstance(id))
             .addToBackStack(null)
             .commit()
+    }
+
+    companion object {
+        const val BACKDROP_IMAGE_URL = "backdrop_image_url"
+        const val POSTER_IMAGE_URL = "poster_image_url"
+        const val PROFILE_IMAGE_URL = "profile_image_url"
     }
 }

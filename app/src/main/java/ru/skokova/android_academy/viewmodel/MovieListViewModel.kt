@@ -8,10 +8,12 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.launch
 import ru.skokova.android_academy.business.MovieListInteractor
-import ru.skokova.android_academy.data.Movie
 import ru.skokova.android_academy.data.Resource
+import ru.skokova.android_academy.data.model.Movie
 
-class MovieListViewModel(private val movieListInteractor: MovieListInteractor) : ViewModel() {
+class MovieListViewModel(
+    private val movieListInteractor: MovieListInteractor
+) : ViewModel() {
     private val mutableMoviesLiveData = MutableLiveData<Resource<List<Movie>>>()
     val moviesLiveData: LiveData<Resource<List<Movie>>> get() = mutableMoviesLiveData
 
@@ -21,11 +23,9 @@ class MovieListViewModel(private val movieListInteractor: MovieListInteractor) :
     }
 
     init {
-        if (mutableMoviesLiveData.value == null) {
-            viewModelScope.launch(exceptionHandler) {
-                val movies = movieListInteractor.getMovies()
-                mutableMoviesLiveData.value = Resource.Success(movies)
-            }
+        viewModelScope.launch(exceptionHandler) {
+            val movies = movieListInteractor.getMovies()
+            mutableMoviesLiveData.value = Resource.Success(movies)
         }
     }
 

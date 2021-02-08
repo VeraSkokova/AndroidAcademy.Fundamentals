@@ -1,4 +1,4 @@
-package ru.skokova.android_academy.data
+package ru.skokova.android_academy.data.model
 
 data class Movie(
     val id: Int,
@@ -10,6 +10,5 @@ data class Movie(
     val numberOfRatings: Int,
     val minimumAge: Int,
     val runtime: Int,
-    val genres: String,
-    val actors: List<Actor>
+    val genres: String
 )
