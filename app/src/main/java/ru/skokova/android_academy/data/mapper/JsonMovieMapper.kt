@@ -38,8 +38,8 @@ class JsonMovieMapper {
     )
 
     companion object {
-        const val RATING_RATIO = 2
-        const val ADULT_AGE = 16
-        const val NOT_ADULT_AGE = 13
+        private const val RATING_RATIO = 2
+        private const val ADULT_AGE = 16
+        private const val NOT_ADULT_AGE = 13
     }
 }

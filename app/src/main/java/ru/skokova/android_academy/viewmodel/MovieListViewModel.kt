@@ -27,10 +27,6 @@ class MovieListViewModel(
     init {
         viewModelScope.launch(exceptionHandler) {
             mutableMoviesLiveData.value = Resource.Loading()
-
-            val cachedMovies = movieListInteractor.getCachedMovies()
-            mutableMoviesLiveData.value = Resource.Success(cachedMovies)
-
             val loadedMovies = movieListInteractor.getMovies()
             mutableMoviesLiveData.value = Resource.Success(loadedMovies)
         }

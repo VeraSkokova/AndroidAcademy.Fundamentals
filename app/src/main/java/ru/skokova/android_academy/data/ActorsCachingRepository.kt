@@ -15,13 +15,11 @@ class DbActorsRepository(private val mapper: EntityActorsMapper) : ActorsCaching
 
     override suspend fun getActors(movieId: Int): List<Actor> {
         val savedActors = moviesDatabase.actorsDao.getActorsForMovie(movieId)
-        return savedActors.actors.map { actorEntity ->
-            mapper.toActor(actorEntity)
-        }
+        return savedActors.actors.map(mapper::toActor)
     }
 
     override suspend fun saveActors(movieId: Int, actors: List<Actor>) {
-        val actorEntities = actors.map { mapper.toEntity(it) }
+        val actorEntities = actors.map(mapper::toEntity)
         moviesDatabase.actorsDao.insertMovieActors(movieId, actorEntities)
     }
 
