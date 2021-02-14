@@ -18,9 +18,7 @@ class MovieListViewModel(
     val moviesLiveData: LiveData<Resource<List<Movie>>> get() = mutableMoviesLiveData
 
     private val exceptionHandler = CoroutineExceptionHandler { coroutineContext, exception ->
-        if (!ViewModelUtils.isNetworkException(exception)) {
-            mutableMoviesLiveData.value = Resource.Error(exception.message ?: DEFAULT_ERROR)
-        }
+        mutableMoviesLiveData.value = Resource.Error(exception.message ?: DEFAULT_ERROR)
         Log.e(ERROR_TAG, "CoroutineExceptionHandler got $exception in $coroutineContext")
     }
 

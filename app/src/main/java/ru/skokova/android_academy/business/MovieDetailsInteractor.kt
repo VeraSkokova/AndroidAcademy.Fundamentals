@@ -22,10 +22,6 @@ class MovieDetailsInteractor(
         MovieDetails(movie, actors)
     }
 
-    suspend fun getCachedMovie(id: Int): Movie = withContext(Dispatchers.IO) {
-        movieDetailsCacheRepository.loadMovie(id)
-    }
-
     private suspend fun getMovie(id: Int): Movie {
         return try {
             val movie = movieDetailsRepository.loadMovie(id)
