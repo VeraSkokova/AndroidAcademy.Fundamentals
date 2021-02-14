@@ -6,21 +6,29 @@ import ru.skokova.android_academy.business.ImageLoadingInfoInteractor
 import ru.skokova.android_academy.business.MovieListInteractor
 import ru.skokova.android_academy.data.*
 import ru.skokova.android_academy.data.mapper.*
+import ru.skokova.android_academy.data.network.RetrofitModule
 
 class MovieViewModelFactory : ViewModelProvider.Factory {
     @Suppress("UNCHECKED_CAST")
     override fun <T : ViewModel?> create(modelClass: Class<T>): T = when (modelClass) {
         MovieListViewModel::class.java -> MovieListViewModel(
             MovieListInteractor(
-                NetworkMovieListRepository(JsonMovieMapper(), DbGenresRepository(EntityGenreMapper())),
+                NetworkMovieListRepository(
+                    RetrofitModule.moviesApi,
+                    JsonMovieMapper(),
+                    DbGenresRepository(EntityGenreMapper())
+                ),
                 DbMovieListRepository(EntityMovieMapper()),
-                NetworkGenresRepository(JsonGenreMapper()),
+                NetworkGenresRepository(RetrofitModule.moviesApi, JsonGenreMapper()),
                 DbGenresRepository(EntityGenreMapper())
             )
         )
         ImageLoadingInfoViewModel::class.java -> ImageLoadingInfoViewModel(
             ImageLoadingInfoInteractor(
-                NetworkImageLoadingInfoRepository(JsonImageLoadingInfoMapper()),
+                NetworkImageLoadingInfoRepository(
+                    RetrofitModule.moviesApi,
+                    JsonImageLoadingInfoMapper()
+                ),
                 CachedImageLoadingInfoRepository()
             )
         )

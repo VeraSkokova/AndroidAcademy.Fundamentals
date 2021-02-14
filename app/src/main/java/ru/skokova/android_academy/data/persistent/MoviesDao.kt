@@ -8,10 +8,10 @@ import androidx.room.Update
 @Dao
 interface MoviesDao {
 
-    @Query("SELECT * FROM " + MoviesDatabaseContract.Movies.TABLE_NAME)
+    @Query("SELECT * FROM movies")
     suspend fun getAllMovies(): List<MovieEntity>
 
-    @Query("SELECT * FROM " + MoviesDatabaseContract.Movies.TABLE_NAME + " WHERE " + MoviesDatabaseContract.Movies.COLUMN_NAME_ID + " == :movieId")
+    @Query("SELECT * FROM movies  WHERE movie_id == :movieId")
     suspend fun getMovie(movieId: Int): MovieEntity
 
     @Insert
@@ -20,6 +20,6 @@ interface MoviesDao {
     @Update
     suspend fun updateMovie(movie: MovieEntity)
 
-    @Query("DELETE FROM " + MoviesDatabaseContract.Movies.TABLE_NAME)
+    @Query("DELETE FROM movies")
     suspend fun deleteMovies()
 }

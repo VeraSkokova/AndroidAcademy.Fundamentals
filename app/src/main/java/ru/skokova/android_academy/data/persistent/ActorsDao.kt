@@ -6,7 +6,7 @@ import androidx.room.*
 interface ActorsDao {
 
     @Transaction
-    @Query("SELECT * FROM " + MoviesDatabaseContract.Movies.TABLE_NAME + " WHERE " + MoviesDatabaseContract.Movies.COLUMN_NAME_ID + " == :movieId")
+    @Query("SELECT * FROM movies WHERE movie_id == :movieId")
     suspend fun getActorsForMovie(movieId: Int): ActorsForMovie
 
     @Transaction
@@ -23,10 +23,10 @@ interface ActorsDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertMovieActor(movieActorEntity: MovieActorEntity)
 
-    @Query("DELETE FROM " + MoviesDatabaseContract.Actors.TABLE_NAME)
+    @Query("DELETE FROM actors")
     suspend fun deleteActors()
 
-    @Query("DELETE FROM " + MoviesDatabaseContract.MovieActor.TABLE_NAME)
+    @Query("DELETE FROM movie_actor")
     suspend fun deleteMovieActors()
 
     @Transaction

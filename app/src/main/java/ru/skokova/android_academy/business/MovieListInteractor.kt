@@ -20,13 +20,17 @@ class MovieListInteractor(
             genresCacheRepository.saveGenres(genres)
         }
 
-        val movies = movieListRepository.loadMovies()
-        movieListCacheRepository.deleteOldMovies()
-        movieListCacheRepository.saveMovies(movies)
-        movies
-    }
-
-    suspend fun getCachedMovies(): List<Movie> = withContext(Dispatchers.IO) {
-        movieListCacheRepository.loadMovies()
+        try {
+            val movies = movieListRepository.loadMovies()
+            movieListCacheRepository.deleteOldMovies()
+            movieListCacheRepository.saveMovies(movies)
+            movies
+        } catch (e: Exception) {
+            if (InteractorUtils.isNetworkException(e)) {
+                movieListCacheRepository.loadMovies()
+            } else {
+                throw e
+            }
+        }
     }
 }

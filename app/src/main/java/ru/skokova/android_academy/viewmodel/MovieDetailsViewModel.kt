@@ -7,15 +7,13 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.launch
-import ru.skokova.android_academy.business.ActorsInteractor
 import ru.skokova.android_academy.business.MovieDetailsInteractor
 import ru.skokova.android_academy.data.Resource
 import ru.skokova.android_academy.data.model.MovieDetails
 
 class MovieDetailsViewModel(
     movieId: Int,
-    private val movieDetailsInteractor: MovieDetailsInteractor,
-    private val actorsInteractor: ActorsInteractor
+    private val movieDetailsInteractor: MovieDetailsInteractor
 ) :
     ViewModel() {
     private val mutableMovieDetailsLiveData = MutableLiveData<Resource<MovieDetails>>()
@@ -35,16 +33,8 @@ class MovieDetailsViewModel(
     private fun getMovieDetails(id: Int) {
         viewModelScope.launch(exceptionHandler) {
             mutableMovieDetailsLiveData.value = Resource.Loading()
-
-            val cachedMovie = movieDetailsInteractor.getCachedMovie(id)
-            val cachedActors = actorsInteractor.getCachedMovieActors(id)
-            mutableMovieDetailsLiveData.value =
-                Resource.Success(MovieDetails(cachedMovie, cachedActors))
-
-            val loadedMovie = movieDetailsInteractor.getMovieById(id)
-            val loadedActors = actorsInteractor.getMovieActors(id)
-            mutableMovieDetailsLiveData.value =
-                Resource.Success(MovieDetails(loadedMovie, loadedActors))
+            val movieDetails = movieDetailsInteractor.getMovieById(id)
+            mutableMovieDetailsLiveData.value = Resource.Success(movieDetails)
         }
     }
 

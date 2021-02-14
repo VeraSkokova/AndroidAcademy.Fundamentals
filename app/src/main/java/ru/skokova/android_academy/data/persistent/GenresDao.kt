@@ -8,12 +8,12 @@ import androidx.room.Query
 @Dao
 interface GenresDao {
 
-    @Query("SELECT * FROM " + MoviesDatabaseContract.Genres.TABLE_NAME)
+    @Query("SELECT * FROM genres")
     suspend fun getAllGenres(): List<GenreEntity>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertGenres(genres: List<GenreEntity>)
 
-    @Query("DELETE FROM " + MoviesDatabaseContract.Genres.TABLE_NAME)
+    @Query("DELETE FROM genres")
     suspend fun deleteGenres()
 }
