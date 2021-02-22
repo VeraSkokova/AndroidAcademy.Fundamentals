@@ -37,7 +37,8 @@ class MoviesWorkerFactory : WorkerFactory() {
                 JsonMovieMapper(),
                 DbGenresRepository(EntityGenreMapper())
             ),
-            DbMovieListRepository(EntityMovieMapper())
+            DbMovieListRepository(EntityMovieMapper()),
+            NotificationsHelper(appContext)
         )
         MovieDetailsUpdateWorker::class.java.name -> MovieDetailsUpdateWorker(
             appContext,

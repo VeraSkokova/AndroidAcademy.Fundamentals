@@ -2,18 +2,17 @@ package ru.skokova.android_academy.business
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import ru.skokova.android_academy.data.GenresCachingRepository
-import ru.skokova.android_academy.data.GenresRepository
-import ru.skokova.android_academy.data.MovieListCachingRepository
-import ru.skokova.android_academy.data.MovieListRepository
+import ru.skokova.android_academy.data.*
 import ru.skokova.android_academy.data.model.Movie
 
 class MovieListInteractor(
     private val movieListRepository: MovieListRepository,
     private val movieListCacheRepository: MovieListCachingRepository,
     private val genresRepository: GenresRepository,
-    private val genresCacheRepository: GenresCachingRepository
+    private val genresCacheRepository: GenresCachingRepository,
+    private val notificationsHelper: NotificationsHelper
 ) {
+
     suspend fun getMovies(): List<Movie> = withContext(Dispatchers.IO) {
         if (genresCacheRepository.loadGenres().isEmpty()) {
             val genres = genresRepository.loadGenres()
@@ -22,6 +21,8 @@ class MovieListInteractor(
 
         try {
             val movies = movieListRepository.loadMovies()
+            val topMovie = movies.maxByOrNull { movie -> movie.ratings }
+            topMovie?.let { notificationsHelper.showNotification(it) }
             movieListCacheRepository.saveMovies(movies)
             movies
         } catch (e: Exception) {
