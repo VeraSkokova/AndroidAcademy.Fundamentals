@@ -2,6 +2,7 @@ package ru.skokova.android_academy.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import ru.skokova.android_academy.MoviesApplication
 import ru.skokova.android_academy.business.ImageLoadingInfoInteractor
 import ru.skokova.android_academy.business.MovieListInteractor
 import ru.skokova.android_academy.data.*
@@ -20,7 +21,8 @@ class MovieViewModelFactory : ViewModelProvider.Factory {
                 ),
                 DbMovieListRepository(EntityMovieMapper()),
                 NetworkGenresRepository(RetrofitModule.moviesApi, JsonGenreMapper()),
-                DbGenresRepository(EntityGenreMapper())
+                DbGenresRepository(EntityGenreMapper()),
+                NotificationsHelper(MoviesApplication.context)
             )
         )
         ImageLoadingInfoViewModel::class.java -> ImageLoadingInfoViewModel(

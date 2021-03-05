@@ -29,4 +29,16 @@
     <string name="actors_error">No actors found for this movie</string>
 
     <string name="load_error">Something went wrong, please try again later</string>
+
+    <!--Notifications-->
+    <string name="channel_top_movie">Top movie</string>
+    <string name="channel_top_movie_description">New movie with highest rating</string>
+    <string name="schedule_a_watch">Schedule a watch</string>
+
+    <!--Permissions-->
+    <string name="calendar_permission_denied">This feature is not available without calendar permission</string>
+    <string name="calendar_permission_explanation">To continue please grant access to calendar</string>
+    <string name="dialog_positive_button">OK</string>
+    <string name="dialog_negative_button">Cancel</string>
+    <string name="watch_movie_description">Watch a movie</string>
 </resources>

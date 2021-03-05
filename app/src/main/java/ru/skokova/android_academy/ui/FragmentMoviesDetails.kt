@@ -1,6 +1,10 @@
 package ru.skokova.android_academy.ui
 
+import android.Manifest
+import android.app.DatePickerDialog
+import android.app.TimePickerDialog
 import android.content.Context
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -9,6 +13,10 @@ import android.widget.ProgressBar
 import android.widget.RatingBar
 import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.widget.AppCompatButton
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
@@ -23,20 +31,24 @@ import ru.skokova.android_academy.data.model.Movie
 import ru.skokova.android_academy.data.model.MovieDetails
 import ru.skokova.android_academy.ui.actor.ActorListDecoration
 import ru.skokova.android_academy.ui.actor.AdapterActors
-import ru.skokova.android_academy.viewmodel.ImageLoadingInfoViewModel
-import ru.skokova.android_academy.viewmodel.MovieDetailsViewModel
-import ru.skokova.android_academy.viewmodel.MovieDetailsViewModelFactory
-import ru.skokova.android_academy.viewmodel.MovieViewModelFactory
+import ru.skokova.android_academy.viewmodel.*
+import java.util.*
 
 class FragmentMoviesDetails : Fragment() {
     private lateinit var movieDetailsViewModel: MovieDetailsViewModel
     private val imageLoadingInfoViewModel: ImageLoadingInfoViewModel by viewModels { MovieViewModelFactory() }
+    private val permissionViewModel: PermissionViewModel by viewModels()
+    private lateinit var movieScheduleViewModel: MovieScheduleViewModel
 
     private val actorsAdapter = AdapterActors()
 
     private var navigationListener: MovieDetailsNavigationListener? = null
 
     private lateinit var progress: ProgressBar
+    private lateinit var scheduleButton: AppCompatButton
+
+    private lateinit var requestPermissionLauncher: ActivityResultLauncher<String>
+    private var isRationaleShown = false
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -61,6 +73,8 @@ class FragmentMoviesDetails : Fragment() {
                 )
             )
         }
+        scheduleButton = view.findViewById(R.id.btn_schedule)
+        scheduleButton.setOnClickListener { onAddScheduleClick() }
 
         val movieId = arguments?.getInt(MOVIE_ID)
         movieId?.let {
@@ -77,6 +91,7 @@ class FragmentMoviesDetails : Fragment() {
             when (resource) {
                 is Resource.Success -> {
                     progress.visibility = View.GONE
+                    allowToScheduleAMovieWatch(resource)
                     updateMovieInformation(view, resource.data)
                 }
                 is Resource.Error -> {
@@ -88,6 +103,25 @@ class FragmentMoviesDetails : Fragment() {
                 is Resource.Loading -> progress.visibility = View.VISIBLE
             }
         })
+
+        permissionViewModel.rationaleShownLiveData.observe(viewLifecycleOwner, { rationaleShown ->
+            isRationaleShown = rationaleShown
+        })
+
+        permissionViewModel.requestPermissionLiveData.observe(
+            viewLifecycleOwner,
+            { requestPermission ->
+                if (requestPermission) {
+                    requestPermission()
+                }
+            })
+    }
+
+    private fun allowToScheduleAMovieWatch(resource: Resource.Success<MovieDetails>) {
+        movieScheduleViewModel =
+            ViewModelProvider(this, MovieScheduleViewModelFactory(resource.data.movie))
+                .get(MovieScheduleViewModel::class.java)
+        scheduleButton.visibility = View.VISIBLE
     }
 
     private fun loadPosters(movie: Movie, actors: List<Actor>, view: View) {
@@ -160,13 +194,91 @@ class FragmentMoviesDetails : Fragment() {
         }
     }
 
+    private fun onAddScheduleClick() {
+        activity?.let {
+            when {
+                ContextCompat.checkSelfPermission(it, Manifest.permission.READ_CALENDAR)
+                        == PackageManager.PERMISSION_GRANTED -> showDateAndTimePickers()
+                shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_COARSE_LOCATION) ->
+                    showPermissionExplanationDialog()
+                isRationaleShown -> showPermissionDeniedDialog()
+                else -> requestPermission()
+            }
+        }
+    }
+
+    private fun showDateAndTimePickers() {
+        val calendar = Calendar.getInstance()
+        val year = calendar.get(Calendar.YEAR)
+        val month = calendar.get(Calendar.MONTH)
+        val day = calendar.get(Calendar.DAY_OF_MONTH)
+
+        val datePickerDialog = DatePickerDialog(
+            requireContext(),
+            { _, chosenYear, chosenMonth, chosenDay ->
+                movieScheduleViewModel.setDate(chosenYear, chosenMonth, chosenDay)
+                showTimePicker()
+            },
+            year,
+            month,
+            day
+        )
+
+        datePickerDialog.show()
+    }
+
+    private fun showTimePicker() {
+        val calendar = Calendar.getInstance()
+        val hour = calendar.get(Calendar.HOUR_OF_DAY)
+        val minute = calendar.get(Calendar.MINUTE)
+
+        val timePickerDialog = TimePickerDialog(
+            requireContext(),
+            { _, chosenHour, chosenMinute ->
+                movieScheduleViewModel.scheduleAWatch(chosenHour, chosenMinute)
+            },
+            hour,
+            minute,
+            true
+        )
+
+        timePickerDialog.show()
+    }
+
+    private fun showPermissionExplanationDialog() {
+        val explanationDialog = PermissionExplanationDialog()
+        explanationDialog.show(childFragmentManager, PermissionExplanationDialog::class.simpleName)
+    }
+
+    private fun showPermissionDeniedDialog() {
+        val permissionDeniedDialog = PermissionDeniedDialog()
+        permissionDeniedDialog.show(childFragmentManager, PermissionDeniedDialog::class.simpleName)
+    }
+
+    private fun requestPermission() {
+        context?.let {
+            requestPermissionLauncher.launch(Manifest.permission.READ_CALENDAR)
+        }
+    }
+
     override fun onAttach(context: Context) {
         super.onAttach(context)
         navigationListener = activity as MovieDetailsNavigationListener
+        requestPermissionLauncher = registerForActivityResult(
+            ActivityResultContracts.RequestPermission()
+        ) { isGranted: Boolean ->
+            if (isGranted) {
+                showDateAndTimePickers()
+            } else {
+                Toast.makeText(context, R.string.calendar_permission_denied, Toast.LENGTH_SHORT)
+                    .show()
+            }
+        }
     }
 
     override fun onDetach() {
         navigationListener = null
+        requestPermissionLauncher.unregister()
         super.onDetach()
     }
 
@@ -176,6 +288,7 @@ class FragmentMoviesDetails : Fragment() {
 
     companion object {
         private const val MOVIE_ID = "movie_id"
+        const val TAG = "MOVIE_DETAILS"
 
         private val imageOption = RequestOptions()
             .placeholder(R.drawable.ic_baseline_movie)

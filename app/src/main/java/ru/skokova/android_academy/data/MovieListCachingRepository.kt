@@ -6,8 +6,6 @@ import ru.skokova.android_academy.data.persistent.MoviesDatabase
 
 interface MovieListCachingRepository : MovieListRepository {
     suspend fun saveMovies(movies: List<Movie>)
-
-    suspend fun deleteOldMovies()
 }
 
 class DbMovieListRepository(private val mapper: EntityMovieMapper) : MovieListCachingRepository {
@@ -25,10 +23,7 @@ class DbMovieListRepository(private val mapper: EntityMovieMapper) : MovieListCa
         val entities = movies.map { movie ->
             mapper.toEntity(movie)
         }
-        moviesDatabase.moviesDao.insertMovies(entities)
-    }
-
-    override suspend fun deleteOldMovies() {
         moviesDatabase.moviesDao.deleteMovies()
+        moviesDatabase.moviesDao.insertMovies(entities)
     }
 }
