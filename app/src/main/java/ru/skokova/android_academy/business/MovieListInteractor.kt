@@ -22,7 +22,6 @@ class MovieListInteractor(
 
         try {
             val movies = movieListRepository.loadMovies()
-            movieListCacheRepository.deleteOldMovies()
             movieListCacheRepository.saveMovies(movies)
             movies
         } catch (e: Exception) {
