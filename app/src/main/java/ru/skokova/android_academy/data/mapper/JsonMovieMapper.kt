@@ -1,11 +1,11 @@
-package ru.skokova.android_academy.data.converter
+package ru.skokova.android_academy.data.mapper
 
 import ru.skokova.android_academy.data.model.Genre
 import ru.skokova.android_academy.data.model.Movie
 import ru.skokova.android_academy.data.network.MovieDetailsResponse
 import ru.skokova.android_academy.data.network.MovieListItemResponse
 
-class MovieMapper {
+class JsonMovieMapper {
     fun toMovie(
         jsonMovie: MovieListItemResponse,
         genresMap: Map<Int, Genre>
@@ -38,8 +38,8 @@ class MovieMapper {
     )
 
     companion object {
-        const val RATING_RATIO = 2
-        const val ADULT_AGE = 16
-        const val NOT_ADULT_AGE = 13
+        private const val RATING_RATIO = 2
+        private const val ADULT_AGE = 16
+        private const val NOT_ADULT_AGE = 13
     }
 }

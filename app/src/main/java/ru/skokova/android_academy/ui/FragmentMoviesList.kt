@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -32,6 +33,8 @@ class FragmentMoviesList : Fragment() {
 
     private var moviesAdapter: AdapterMovies? = null
 
+    private lateinit var progress: ProgressBar
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -40,6 +43,8 @@ class FragmentMoviesList : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        progress = view.findViewById(R.id.progress)
 
         moviesAdapter = AdapterMovies(clickListener, Glide.with(this))
         moviesAdapter?.setHasStableIds(true)
@@ -78,6 +83,7 @@ class FragmentMoviesList : Fragment() {
                         Toast.LENGTH_SHORT
                     )
                         .show()
+                    is Resource.Loading -> progress.visibility = View.VISIBLE
                 }
             }
         )
@@ -89,14 +95,19 @@ class FragmentMoviesList : Fragment() {
             { resource ->
                 when (resource) {
                     is Resource.Success -> {
+                        progress.visibility = View.GONE
                         moviesAdapter?.updateMovies(resource.data, baseUrl)
                     }
-                    is Resource.Error -> Toast.makeText(
-                        context,
-                        resource.message,
-                        Toast.LENGTH_SHORT
-                    )
-                        .show()
+                    is Resource.Error -> {
+                        progress.visibility = View.GONE
+                        Toast.makeText(
+                            context,
+                            resource.message,
+                            Toast.LENGTH_SHORT
+                        )
+                            .show()
+                    }
+                    is Resource.Loading -> progress.visibility = View.VISIBLE
                 }
             })
     }

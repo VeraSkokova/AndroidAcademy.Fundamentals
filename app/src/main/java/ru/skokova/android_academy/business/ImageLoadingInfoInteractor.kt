@@ -10,8 +10,7 @@ class ImageLoadingInfoInteractor(
     private val cachedRepository: ImageLoadingInfoRepository
 ) {
     suspend fun getImageLoadingInfo(): ImageLoadingInfo = withContext(Dispatchers.IO) {
-        cachedRepository.getImageLoadingInfo() ?: run {
-            networkRepository.getImageLoadingInfo() ?: throw IllegalStateException()
-        }
+        cachedRepository.getImageLoadingInfo() ?: networkRepository.getImageLoadingInfo()
+        ?: throw IllegalStateException()
     }
 }

@@ -7,15 +7,13 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.launch
-import ru.skokova.android_academy.business.ActorsInteractor
 import ru.skokova.android_academy.business.MovieDetailsInteractor
 import ru.skokova.android_academy.data.Resource
 import ru.skokova.android_academy.data.model.MovieDetails
 
 class MovieDetailsViewModel(
     movieId: Int,
-    private val movieDetailsInteractor: MovieDetailsInteractor,
-    private val actorsInteractor: ActorsInteractor
+    private val movieDetailsInteractor: MovieDetailsInteractor
 ) :
     ViewModel() {
     private val mutableMovieDetailsLiveData = MutableLiveData<Resource<MovieDetails>>()
@@ -30,17 +28,16 @@ class MovieDetailsViewModel(
         getMovieDetails(movieId)
     }
 
-    fun getMovieDetails(id: Int) {
+    private fun getMovieDetails(id: Int) {
         viewModelScope.launch(exceptionHandler) {
-            val movie = movieDetailsInteractor.getMovieById(id)
-            val actors = actorsInteractor.getMovieActors(id)
-            mutableMovieDetailsLiveData.value = Resource.Success(MovieDetails(movie, actors))
+            mutableMovieDetailsLiveData.value = Resource.Loading()
+            val movieDetails = movieDetailsInteractor.getMovieById(id)
+            mutableMovieDetailsLiveData.value = Resource.Success(movieDetails)
         }
     }
 
     companion object {
         private const val ERROR_TAG = "COROUTINE_ERROR"
         private const val DEFAULT_ERROR = "An error occurred while loading movie details"
-        private const val NULL_MESSAGE = "There is no movie with this id"
     }
 }
